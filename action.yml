@@ -1,0 +1,32 @@
+name: 'Keepalive Workflow'
+author: 'Gautam Krishna R'
+description: 'GitHub action to prevent GitHub from suspending your cronjob based triggers due to repository inactivity'
+
+inputs:
+  gh_token:
+    description: 'GitHub access token with Repo scope'
+    required: false
+    default: ${{ github.token }}
+  commit_message:
+    description: "Commit message used while committing to the repo"
+    default: "Automated commit by Keepalive Workflow to keep the repository active"
+    required: false
+  committer_username:
+    description: "Username used while committing to the repo"
+    default: "keepalive-workflow-bot"
+    required: false
+  committer_email:
+    description: "Email id used while committing to the repo"
+    default: "keepaliveworkflow@gautamkrishnar.com"
+    required: false
+  time_elapsed:
+    description: "Time elapsed from the last commit to trigger a new automated commit (in days)"
+    default: "50"
+    required: false
+
+runs:
+  using: node12
+  main: dist/index.js
+branding:
+  icon: 'truck'
+  color: 'blue'
