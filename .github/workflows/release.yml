@@ -5,7 +5,7 @@ on:
     workflows: ["Version bump"]
     branches: [master]
     types:
-      - success
+      - completed
 jobs:
   version-bump:
     name: Release to github releases
