@@ -5,10 +5,11 @@ on:
     workflows: ["Version bump"]
     branches: [master]
     types:
-      - completed
+      - success
 jobs:
   version-bump:
     name: Release to github releases
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
