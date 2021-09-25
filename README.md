@@ -96,7 +96,7 @@ If you use the workflow as mentioned via GitHub actions following are the option
 | `time_elapsed` | `50` | Time elapsed from the previous commit to trigger a new automated commit (in days) | No |
 
 ### For Javascript Library
-If you are using the JS Library version of tne project, please console the function's DocString in [library.js](library.js) to see the list of available parameters.
+If you are using the JS Library version of tne project, please consult the function's DocString in [library.js](library.js) to see the list of available parameters.
 
 ## License
 This project uses [GNU GENERAL PUBLIC LICENSE](LICENSE)
