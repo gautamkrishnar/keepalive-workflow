@@ -1,6 +1,7 @@
 name: Publish Package
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
@@ -13,8 +14,8 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
+      - run: yarn install --frozen-lockfile
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
@@ -29,7 +30,7 @@ jobs:
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
+      - run: yarn install --frozen-lockfile
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
