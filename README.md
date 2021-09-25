@@ -12,7 +12,8 @@ This will keep the cronjob trigger active so that it will run indefinitely witho
 ## How to use
 There are two ways you can consume this library in your GitHub actions
 ### Via GitHub Actions (For GitHub actions users)
-You can just include the library as a step after one of your favorite GitHub actions.
+You can just include the library as a step after one of your favorite GitHub actions. Your workflow file should have the checkout action defined in one of your steps since this library needs git CLI to work.
+
 ```yaml
 name: Github Action with a cronjob trigger
 on:
@@ -24,6 +25,7 @@ jobs:
     name: Cronjob based github action
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - # step1
       - # step 2
       - # step n, use it as the last step
@@ -53,7 +55,7 @@ jobs:
 </details>
 
 ### Via JavaScript library (For GitHub Actions developers)
-For developers making awesome GitHub actions, you can consume the library in your javascript-based GitHub action by installing it from [NPM](https://www.npmjs.com/package/keepalive-workflow).
+For developers making awesome GitHub actions, you can consume the library in your javascript-based GitHub action by installing it from [NPM](https://www.npmjs.com/package/keepalive-workflow). Make sure that your GitHub action uses checkout action since this library needs it as a dependency.
 You can also ask your users to include it as an additional step as mentioned in the first part.
 
 #### Install the package
