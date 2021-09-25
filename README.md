@@ -7,12 +7,12 @@ GitHub will suspend the scheduled trigger for GitHub action workflows if there i
 
 ### What
 This workflow will automatically create a dummy commit in your repo if the last commit in your repo is 50 days (default) ago.
-This will keep the cronjob trigger active, so that it will run indefinitely without getting suspended by GitHub for inactivity.
+This will keep the cronjob trigger active so that it will run indefinitely without getting suspended by GitHub for inactivity.
 
 ## How to use
 There are two ways you can consume this library in your GitHub actions
 ### Via GitHub Actions (For GitHub actions users)
-You can just include the library as a step after one of your favourite GitHub action.
+You can just include the library as a step after one of your favorite GitHub actions.
 ```yaml
 name: Github Action with a cronjob trigger
 on:
@@ -33,11 +33,11 @@ jobs:
   <summary>Let's take an example of [Waka Readme](https://github.com/athul/waka-readme)</summary>
 
 ```yaml
-name: My awesome reame
+name: My awesome readme
 on:
   workflow_dispatch:
   schedule:
-    # Runs at 12am UTC
+    # Runs at 12 am UTC
     - cron: "0 0 * * *"
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
 </details>
 
 ### Via JavaScript library (For GitHub Actions developers)
-For developers making awesome GitHub actions, you can consume the library in your own javascript based GitHub action by installing it from [NPM](https://www.npmjs.com/package/keepalive-workflow).
+For developers making awesome GitHub actions, you can consume the library in your javascript-based GitHub action by installing it from [NPM](https://www.npmjs.com/package/keepalive-workflow).
 You can also ask your users to include it as an additional step as mentioned in the first part.
 
 #### Install the package
@@ -85,7 +85,7 @@ KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage,
 
 ## Options
 ### For GitHub Action
-If you use the workflow as mentioned via GitHub actions following are the options available to you to customize its behaviour.
+If you use the workflow as mentioned via GitHub actions following are the options available to you to customize its behavior.
 
 | Option | Default Value | Description | Required |
 |--------|--------|--------|--------|
@@ -96,7 +96,7 @@ If you use the workflow as mentioned via GitHub actions following are the option
 | `time_elapsed` | `50` | Time elapsed from the previous commit to trigger a new automated commit (in days) | No |
 
 ### For Javascript Library
-If you are using the JS Library version of tne project, please consult the function's DocString in [library.js](library.js) to see the list of available parameters.
+If you are using the JS Library version of the project, please consult the function's DocString in [library.js](library.js) to see the list of available parameters.
 
 ## License
 This project uses [GNU GENERAL PUBLIC LICENSE](LICENSE)
