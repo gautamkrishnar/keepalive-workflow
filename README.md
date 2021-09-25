@@ -1,4 +1,4 @@
-# Keepalive Workflow
+# Keepalive Workflow [![npm version](https://badge.fury.io/js/keepalive-workflow.svg)](https://badge.fury.io/js/keepalive-workflow)
 GitHub action to prevent GitHub from suspending your cronjob based triggers due to repository inactivity
 
 ### Why
@@ -11,7 +11,7 @@ This will keep the cronjob trigger active so that it will run indefinitely witho
 
 ## How to use
 There are two ways you can consume this library in your GitHub actions
-### Via GitHub Actions (For GitHub actions users)
+### Via GitHub Actions (For GitHub Actions users)
 You can just include the library as a step after one of your favorite GitHub actions. Your workflow file should have the checkout action defined in one of your steps since this library needs git CLI to work.
 
 ```yaml
