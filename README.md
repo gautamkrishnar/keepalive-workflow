@@ -2,7 +2,7 @@
 GitHub action to prevent GitHub from suspending your cronjob based triggers due to repository inactivity
 
 ### Why
-GitHub will suspend the scheduled trigger for GitHub action workflows if there is no commit in the repository for the past 60 days. The cron based triggers won't run unless a new commit is made.
+GitHub will suspend the scheduled trigger for GitHub action workflows if there is no commit in the repository for the past 60 days. The cron based triggers won't run unless a new commit is made. It shows the message "This scheduled workflow is disabled because there hasn't been activity in this repository for at least 60 days" under the cronjob triggered action.
 ![preview](https://user-images.githubusercontent.com/8397274/105174930-4303e100-5b49-11eb-90ed-95a55697582f.png)
 
 ### What
