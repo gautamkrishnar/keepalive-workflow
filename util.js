@@ -1,10 +1,10 @@
 const {spawn} = require('child_process');
 
 /**
- * Executes a command and returns its result as promise
- * @param cmd {string} command to execute
- * @param args {array} command line args
- * @param options {Object} extra options
+ * @description Executes a command and returns its result as promise
+ * @param cmd {string} - command to execute
+ * @param args {array} - command line args
+ * @param options {Object} - extra options
  * @return {Promise<Object>}
  */
 const execute = (cmd, args = [], options = {}) => new Promise((resolve, reject) => {
