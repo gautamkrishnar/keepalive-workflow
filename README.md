@@ -73,7 +73,8 @@ yarn add keepalive-workflow
 
 #### Use it in your own GitHub action source code
 ```javascript
-const { KeepAliveWorkflow } = require('keepalive-workflow')
+const core = require('@actions/core');
+const { KeepAliveWorkflow } = require('keepalive-workflow');
 
 // Using the lib
 KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage, timeElapsed)
