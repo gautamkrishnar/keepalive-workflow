@@ -1,4 +1,4 @@
-const {execute} = require('util');
+const {execute} = require('./util');
 
 /***
  * @description Code to prevent GitHub from suspending your cronjob based triggers due to repository inactivity
