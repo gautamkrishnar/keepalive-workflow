@@ -9,7 +9,7 @@ const {execute} = require('./util');
  * @param {number} timeElapsed - Time elapsed from the last commit to trigger a new automated commit (in days)
  * @return {Promise<string>} - Promise with success or failure message
  */
-const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed) => {
+const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed = 50) => {
   return new Promise(async (resolve, reject) => {
     try {
       // Calculating the last commit date
