@@ -97,7 +97,7 @@ If you use the workflow as mentioned via GitHub actions following are the option
 | `gh_token` | your default GitHub token with repo scope | GitHub access token with Repo scope | No |
 | `commit_message` | `Automated commit by Keepalive Workflow to keep the repository active` | Commit message used while committing to the repo | No  |
 | `committer_username` | `gkr-bot` | Username used while committing to the repo | No |
-| `committer_username` | `gkr@tuta.io` | Email id used while committing to the repo | No |
+| `committer_email` | `gkr@tuta.io` | Email id used while committing to the repo | No |
 | `time_elapsed` | `50` | Time elapsed from the previous commit to trigger a new automated commit (in days) | No |
 
 ### For Javascript Library
