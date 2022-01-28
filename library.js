@@ -6,10 +6,11 @@ const {execute} = require('./util');
  * @param {string} committerUsername - Username of the GitHub user to create dummy commit
  * @param {string} committerEmail - Email id of the GitHub user to create dummy commit
  * @param {string} commitMessage - Commit message while doing dummy commit
- * @param {number} timeElapsed - Time elapsed from the last commit to trigger a new automated commit (in days)
+ * @param {number} timeElapsed - Time elapsed from the last commit to trigger a new automated commit (in days). Default: 50
+ * @param {boolean} autoPush - Boolean flag to define if the library should automatically push the changes. Default: false
  * @return {Promise<string>} - Promise with success or failure message
  */
-const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed = 50) => {
+const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed = 50, autoPush = false) => {
   return new Promise(async (resolve, reject) => {
     try {
       // Calculating the last commit date
@@ -44,10 +45,12 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
           '--allow-empty',
           '-m',
           `${commitMessage}`]);
-        await execute('git', [
-          'push',
-          'origin',
-          'HEAD']);
+        if (autoPush) {
+          await execute('git', [
+            'push',
+            'origin',
+            'HEAD']);
+        }
         resolve('Dummy commit created to keep the repository active...');
       } else {
         resolve('Nothing to do...');

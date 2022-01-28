@@ -6,10 +6,11 @@ const githubToken = core.getInput('gh_token');
 const committerUsername = core.getInput('committer_username');
 const committerEmail = core.getInput('committer_email');
 const commitMessage = core.getInput('commit_message');
+const autoPush = (core.getInput('auto_push') === 'true');
 const timeElapsed = parseInt(core.getInput('time_elapsed'));
 
 // Using the lib
-KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage, timeElapsed)
+KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage, timeElapsed, autoPush)
   .then((message) => {
     core.info(message);
     process.exit(0);
