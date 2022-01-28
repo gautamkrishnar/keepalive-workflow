@@ -31,7 +31,7 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
           'remote',
           'set-url',
           'origin',
-          `https://${githubToken}@github.com/${process.env.GITHUB_REPOSITORY}.git`
+          `https://x-access-token:${githubToken}@github.com/${process.env.GITHUB_REPOSITORY}.git`
         ]);
         await execute('git', [
           'config',
@@ -43,7 +43,11 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
           'commit',
           '--allow-empty',
           '-m',
-          `"${commitMessage}"`]);
+          `${commitMessage}`]);
+        await execute('git', [
+          'push',
+          'origin',
+          'HEAD']);
         resolve('Dummy commit created to keep the repository active...');
       } else {
         resolve('Nothing to do...');
