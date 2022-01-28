@@ -43,7 +43,7 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
           'commit',
           '--allow-empty',
           '-m',
-          `"${commitMessage}"`]);
+          `${commitMessage}`]);
         await execute('git', [
           'push',
           'origin',
