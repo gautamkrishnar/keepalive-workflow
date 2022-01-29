@@ -104,6 +104,27 @@ If you use the workflow as mentioned via GitHub actions following are the option
 ### For Javascript Library
 If you are using the JS Library version of the project, please consult the function's DocString in [library.js](library.js) to see the list of available parameters.
 
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/Nigui"><img src="https://avatars.githubusercontent.com/u/6088236?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Guillaume NICOLAS</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=Nigui" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/abitmore"><img src="https://avatars.githubusercontent.com/u/9946777?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Abit</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=abitmore" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
 ## License
 This project uses [GNU GENERAL PUBLIC LICENSE](LICENSE)
 
