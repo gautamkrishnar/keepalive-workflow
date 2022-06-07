@@ -1,6 +1,6 @@
 {
   "name": "keepalive-workflow",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "GitHub action to prevent GitHub from suspending your cronjob based trigger due to repository inactivity",
   "main": "library.js",
   "scripts": {
