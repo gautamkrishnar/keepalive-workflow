@@ -32,7 +32,7 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
           'remote',
           'set-url',
           'origin',
-          `https://x-access-token:${githubToken}@github.com/${process.env.GITHUB_REPOSITORY}.git`
+          `https://x-access-token:${githubToken}@${process.env.GITHUB_SERVER_URL.replace(/^https?:\/\//, '')}/${process.env.GITHUB_REPOSITORY}.git`
         ]);
         await execute('git', [
           'config',
