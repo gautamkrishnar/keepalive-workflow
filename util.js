@@ -9,11 +9,12 @@ const {spawn} = require('child_process');
  */
 const execute = (cmd, args = [], options = {}) => new Promise((resolve, reject) => {
   let outputData = '';
+  let errorData = '';
   const optionsToCLI = {
     ...options
   };
   if (!optionsToCLI.stdio) {
-    Object.assign(optionsToCLI, {stdio: ['inherit', 'inherit', 'inherit']});
+    Object.assign(optionsToCLI, {stdio: ['pipe', 'pipe', 'pipe']});
   }
   const app = spawn(cmd, args, optionsToCLI);
   if (app.stdout) {
@@ -23,13 +24,20 @@ const execute = (cmd, args = [], options = {}) => new Promise((resolve, reject) 
     });
   }
 
+  // show command errors
+  if (app.stderr) {
+    app.stderr.on('data', function (data) {
+      errorData += data.toString();
+    });
+  }
+
   app.on('close', (code) => {
+    const responseObj = {command: cmd+" "+args.join(" "), exitCode: code, outputData, errorData};
     if (code !== 0) {
-      return reject({code, outputData});
+      return reject(responseObj);
     }
-    return resolve({code, outputData});
+    return resolve(responseObj);
   });
-  app.on('error', () => reject({code: 1, outputData}));
 });
 
 module.exports = {

@@ -8,7 +8,7 @@ const {execute} = require('./util');
  * @param {string} commitMessage - Commit message while doing dummy commit
  * @param {number} timeElapsed - Time elapsed from the last commit to trigger a new automated commit (in days). Default: 50
  * @param {boolean} autoPush - Boolean flag to define if the library should automatically push the changes. Default: false
- * @return {Promise<string>} - Promise with success or failure message
+ * @return {Promise<string> | Promise<Object>} - Promise with success message or failure object
  */
 const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed = 50, autoPush = false) => {
   return new Promise(async (resolve, reject) => {
@@ -56,7 +56,7 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
         resolve('Nothing to do...');
       }
     } catch (e) {
-      reject(e.toString());
+      reject(e);
     }
   });
 };
