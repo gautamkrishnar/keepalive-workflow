@@ -56,7 +56,7 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
         resolve('Nothing to do...');
       }
     } catch (e) {
-      reject(e.toString());
+      reject(e);
     }
   });
 };
