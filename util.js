@@ -1,4 +1,5 @@
 const {spawn} = require('child_process');
+const core = require('@actions/core');
 
 /**
  * @description Executes a command and returns its result as promise
@@ -20,6 +21,13 @@ const execute = (cmd, args = [], options = {}) => new Promise((resolve, reject) 
     // Only needed for pipes
     app.stdout.on('data', function (data) {
       outputData += data.toString();
+    });
+  }
+
+  // show command errors
+  if (app.stderr) {
+    app.stderr.on('data', function (data) {
+      core.info(data);
     });
   }
 
