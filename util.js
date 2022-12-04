@@ -25,11 +25,11 @@ const execute = (cmd, args = [], options = {}) => new Promise((resolve, reject) 
 
   app.on('close', (code) => {
     if (code !== 0) {
-      return reject({code, outputData});
+      return reject({command: cmd+" "+args.join(" "), code, outputData, error: "non-zero exit code"});
     }
     return resolve({code, outputData});
   });
-  app.on('error', (error) => reject({code: 1, outputData, error}));
+  app.on('error', (error) => reject({command: cmd+" "+args.join(" "), code: 1, outputData, error}));
 });
 
 module.exports = {
