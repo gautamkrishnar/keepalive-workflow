@@ -29,7 +29,7 @@ const execute = (cmd, args = [], options = {}) => new Promise((resolve, reject) 
     }
     return resolve({code, outputData});
   });
-  app.on('error', () => reject({code: 1, outputData}));
+  app.on('error', (error) => reject({code: 1, outputData, error}));
 });
 
 module.exports = {
