@@ -112,11 +112,14 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="https://github.com/abitmore"><img src="https://avatars.githubusercontent.com/u/9946777?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Abit</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=abitmore" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/Nigui"><img src="https://avatars.githubusercontent.com/u/6088236?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Guillaume NICOLAS</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=Nigui" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/dmaticzka"><img src="https://avatars.githubusercontent.com/u/113329?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Daniel Maticzka</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=dmaticzka" title="Code">💻</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/abitmore"><img src="https://avatars.githubusercontent.com/u/9946777?v=4?s=100" width="100px;" alt="Abit"/><br /><sub><b>Abit</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=abitmore" title="Code">💻</a></td>
+      <td align="center"><a href="https://github.com/Nigui"><img src="https://avatars.githubusercontent.com/u/6088236?v=4?s=100" width="100px;" alt="Guillaume NICOLAS"/><br /><sub><b>Guillaume NICOLAS</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=Nigui" title="Documentation">📖</a></td>
+      <td align="center"><a href="https://github.com/dmaticzka"><img src="https://avatars.githubusercontent.com/u/113329?v=4?s=100" width="100px;" alt="Daniel Maticzka"/><br /><sub><b>Daniel Maticzka</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=dmaticzka" title="Code">💻</a></td>
+      <td align="center"><a href="https://itrooz.fr"><img src="https://avatars.githubusercontent.com/u/42669835?v=4?s=100" width="100px;" alt="iTrooz"/><br /><sub><b>iTrooz</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=iTrooz" title="Code">💻</a></td>
+    </tr>
+  </tbody>
 </table>
 
 <!-- markdownlint-restore -->
