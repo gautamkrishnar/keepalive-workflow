@@ -20,7 +20,7 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
       const commitDate = new Date(parseInt(outputData, 10) * 1000);
       const diffInDays = Math.round((new Date() - commitDate) / (1000 * 60 * 60 * 24));
 
-      if (diffInDays > timeElapsed) {
+      if (diffInDays >= timeElapsed) {
         // Do dummy commit if elapsed time is greater than 50 (default) days
         await execute('git', [
           'config',
