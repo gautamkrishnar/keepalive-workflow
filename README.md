@@ -27,9 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - # step1
-      - # step 2
-      - # step n, use it as the last step
+      # - step1
+      # - step 2
+      # - step n, use it as the last step
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
 ```
 <details>
