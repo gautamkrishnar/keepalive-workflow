@@ -104,6 +104,10 @@ If you use the workflow as mentioned via GitHub actions following are the option
 ### For Javascript Library
 If you are using the JS Library version of the project, please consult the function's DocString in [library.js](library.js) to see the list of available parameters.
 
+
+### FAQs and Common issues
+- [Error Code 128 / `GH006: Protected branch update failed`](https://github.com/gautamkrishnar/keepalive-workflow/discussions/13)
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
