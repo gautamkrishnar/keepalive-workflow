@@ -32,6 +32,9 @@ jobs:
       # - step n, use it as the last step
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
 ```
+Go to repository settings, Click on Actions > General. Update the "Workflow permissions" to "Read and write permissions". Click on save.
+    
+   ![Workflow permissions](https://github.com/gautamkrishnar/blog-post-workflow/assets/8397274/26d4c089-dc58-4309-b65a-2acb9a3c08ba)
 <details>
   <summary>Let's take an example of [Waka Readme](https://github.com/athul/waka-readme)</summary>
 
