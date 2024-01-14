@@ -45,8 +45,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "lgmorand",
+      "name": "Louis-Guillaume MORAND",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6757079?v=4",
+      "profile": "http://lgmorand.github.io",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs"
 }
