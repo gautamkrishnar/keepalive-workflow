@@ -8,11 +8,19 @@ const {execute} = require('./util');
  * @param {string} commitMessage - Commit message while doing dummy commit
  * @param {number} timeElapsed - Time elapsed from the last commit to trigger a new automated commit (in days). Default: 50
  * @param {boolean} autoPush - Boolean flag to define if the library should automatically push the changes. Default: false
+ * @param {boolean} autoWriteCheck - Enables automatic checking of the token for branch protection rules
  * @return {Promise<string> | Promise<Object>} - Promise with success message or failure object
  */
-const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed = 50, autoPush = false) => {
+const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed = 50, autoPush = false, autoWriteCheck = false) => {
   return new Promise(async (resolve, reject) => {
     try {
+      // Write detection
+      if (autoWriteCheck) {
+        // Protected branches
+        if (process.env.GITHUB_REF_PROTECTED === 'true') {
+          reject(`Looks like the branch is write protected. You need to disable that for this to work: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches`)
+        }
+      }
       // Calculating the last commit date
       const {outputData} = await execute('git', ['--no-pager', 'log', '-1', '--format=%ct'],
         {encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe']});

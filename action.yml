@@ -27,6 +27,10 @@ inputs:
     description: "Defines if the workflow pushes the changes automatically"
     default: "true"
     required: false
+  auto_write_check:
+    description: "Specifies whether the workflow will verify the repository's write access privilege for the token before executing"
+    default: "true"
+    required: false
 
 runs:
   using: node16

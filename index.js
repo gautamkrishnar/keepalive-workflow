@@ -8,9 +8,10 @@ const committerEmail = core.getInput('committer_email');
 const commitMessage = core.getInput('commit_message');
 const autoPush = (core.getInput('auto_push') === 'true');
 const timeElapsed = parseInt(core.getInput('time_elapsed'));
+const autoWriteCheck = (core.getInput('auto_write_check') === 'true');
 
 // Using the lib
-KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage, timeElapsed, autoPush)
+KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage, timeElapsed, autoPush, autoWriteCheck)
   .then((message) => {
     core.info(message);
     process.exit(0);
