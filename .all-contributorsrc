@@ -54,6 +54,24 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "kaovilai",
+      "name": "Tiger Kaovilai",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11228024?v=4",
+      "profile": "https://github.com/kaovilai",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "Howard20181",
+      "name": "Howard Wu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40033067?v=4",
+      "profile": "https://github.com/Howard20181",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
