@@ -23,9 +23,6 @@
     "url": "https://github.com/gautamkrishnar/keepalive-workflow/issues"
   },
   "homepage": "https://github.com/gautamkrishnar/keepalive-workflow#readme",
-  "dependencies": {
-    "process": "latest"
-  },
   "devDependencies": {
     "@actions/core": "^1.5.0",
     "jshint": "^2.12.0",
