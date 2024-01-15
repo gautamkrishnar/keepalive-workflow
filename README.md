@@ -103,6 +103,7 @@ If you use the workflow as mentioned via GitHub actions following are the option
 | `committer_email` | `gkr@tuta.io` | Email id used while committing to the repo | No |
 | `time_elapsed` | `50` | Time elapsed from the previous commit to trigger a new automated commit (in days) | No |
 | `auto_push` | `true` | Defines if the workflow pushes the changes automatically | No |
+| `auto_write_check` | `true` | Specifies whether the workflow will verify the repository's write access privilege for the token before executing | No |
 
 ### For Javascript Library
 If you are using the JS Library version of the project, please consult the function's DocString in [library.js](library.js) to see the list of available parameters.
