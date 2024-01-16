@@ -29,7 +29,7 @@ inputs:
     required: false
   auto_write_check:
     description: "Specifies whether the workflow will verify the repository's write access privilege for the token before executing"
-    default: "true"
+    default: "false"
     required: false
 
 runs:
