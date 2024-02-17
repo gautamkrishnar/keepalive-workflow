@@ -100,7 +100,7 @@ const APIKeepAliveWorkflow = (githubToken, {workflowFile = null, apiBaseUrl= pro
           repo,
           workflow_id: workflowFile,
         });
-        response.status === "204" ? resolve('Kept repo active using the GitHUb API...') :
+        response.status.toString() === '204' ? resolve('Kept repo active using the GitHUb API...') :
           reject(response);
       } else {
         resolve('Nothing to do...');
