@@ -25,6 +25,7 @@
   "homepage": "https://github.com/gautamkrishnar/keepalive-workflow#readme",
   "devDependencies": {
     "@actions/core": "^1.5.0",
+    "@octokit/rest": "^20.0.2",
     "jshint": "^2.12.0",
     "mocha": "^8.1.3",
     "parcel-bundler": "^1.12.4",
