@@ -26,7 +26,7 @@ jobs:
     name: Cronjob based github action
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # - step1
       # - step 2
       # - step n, use it as the last step
@@ -51,7 +51,7 @@ jobs:
     name: Update this repo's README
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: athul/waka-readme@master
         with:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
@@ -63,7 +63,7 @@ jobs:
 If you do not want dummy  commits in your repository's commit history, you can use the library's GitHub API mode. 
 
 1. Make sure that you create a fine graded token with `actions:write` permission or a PAT with `workflow` permission. You can create it [here](https://github.com/settings/personal-access-tokens/new) and [here](https://github.com/settings/tokens/new)  respectively.
-2. Go to settings page in your repo and create a secret with name `GITHUB_TOKEN` and use the previously created token as the value. Refer [docs](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
+2. Go to settings page in your repo and create a secret with name `PAT_TOKEN` and use the previously created token as the value. Refer [docs](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
 2. Use the code from the following example, in this case you do not need `actions/checkout` workflow as a dependency.
 
 ```yaml
@@ -83,7 +83,7 @@ jobs:
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow in api mode
         with:
           use_api: true
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          gh_token: ${{ secrets.PAT_TOKEN }}
 ```
 
 ### Via JavaScript library (For GitHub Actions developers)
