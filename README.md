@@ -64,7 +64,7 @@ If you do not want dummy  commits in your repository's commit history, you can u
 
 1. Make sure that you create a fine graded token with `actions:write` permission or a PAT with `workflow` permission. You can create it [here](https://github.com/settings/personal-access-tokens/new) and [here](https://github.com/settings/tokens/new)  respectively.
 2. Go to settings page in your repo and create a secret with name `PAT_TOKEN` and use the previously created token as the value. Refer [docs](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
-2. Use the code from the following example, in this case you do not need `actions/checkout` workflow as a dependency.
+2. Use the code from the following example. Your workflow file should have the checkout action defined in one of your steps since this library needs git CLI to work.
 
 ```yaml
 name: Github Action with a cronjob trigger
@@ -77,7 +77,7 @@ jobs:
     name: Cronjob based github action
     runs-on: ubuntu-latest
     steps:
-      # - step 1
+      - uses: actions/checkout@v4
       # - step 2
       # - step n, use it as the last step
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow in api mode
