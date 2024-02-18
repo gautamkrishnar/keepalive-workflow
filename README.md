@@ -12,7 +12,7 @@ This will keep the cronjob trigger active so that it will run indefinitely witho
 
 ## How to use
 There are three ways you can consume this library in your GitHub actions
-### Via GitHub Actions - Dummy Commits (For GitHub Actions users)
+### Dummy Commit Keepalive Workflow (For GitHub Actions users)
 You can just include the library as a step after one of your favorite GitHub actions. Your workflow file should have the checkout action defined in one of your steps since this library needs git CLI to work.
 
 ```yaml
@@ -59,7 +59,7 @@ jobs:
 ```
 </details>
 
-### Via GitHub Actions - GitHub API (For GitHub Actions users)
+### GitHub API Keepalive Workflow (For GitHub Actions users)
 If you do not want dummy  commits in your repository's commit history, you can use the library's GitHub API mode. 
 
 1. Make sure that you create a fine graded token with `actions:write` permission or a PAT with `workflow` permission. You can create it [here](https://github.com/settings/personal-access-tokens/new) and [here](https://github.com/settings/tokens/new)  respectively.
@@ -86,8 +86,8 @@ jobs:
           gh_token: ${{ secrets.PAT_TOKEN }}
 ```
 
-### Via JavaScript library (For GitHub Actions developers)
-For developers making awesome GitHub actions, you can consume the library in your javascript-based GitHub action by installing it from [NPM](https://www.npmjs.com/package/keepalive-workflow). Make sure that your GitHub action uses checkout action since this library needs it as a dependency.
+### Using via NPM (For GitHub Actions developers)
+For developers creating GitHub actions, you can consume the library in your javascript-based GitHub action by installing it from [NPM](https://www.npmjs.com/package/keepalive-workflow). Make sure that your GitHub action uses checkout action since this library needs it as a dependency.
 You can also ask your users to include it as an additional step as mentioned in the first part.
 
 #### Install the package
