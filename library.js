@@ -81,7 +81,16 @@ const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail,
  * @param {APIKeepAliveWorkflowOptions} [options] - Configuration options
  * @return {Promise<string, Error>} - Promise with success message or failure object
  */
-const APIKeepAliveWorkflow = (githubToken, {workflowFile = null, apiBaseUrl= process.env.GITHUB_API_URL, timeElapsed = 50, autoWriteCheck = false} = options = {}) => {
+const APIKeepAliveWorkflow = (githubToken,
+                              {
+                                workflowFile = null,
+                                apiBaseUrl= (
+                                  (!!process.env.GITHUB_API_URL) ?
+                                    process.env.GITHUB_API_URL : 'https://api.github.com'
+                                ),
+                                timeElapsed = 50,
+                                autoWriteCheck = false
+                              } = {}) => {
   return new Promise(async (resolve, reject) => {
     try {
       writeDetectionCheck(autoWriteCheck, reject);
