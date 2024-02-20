@@ -120,7 +120,7 @@ KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage,
 // Using the lib in GitHub API mode
 APIKeepAliveWorkflow(githubToken, {
   timeElapsed
-}.then((message) => {
+}).then((message) => {
     core.info(message);
     process.exit(0);
   })
