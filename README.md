@@ -14,7 +14,6 @@ This will keep the cronjob trigger active so that it will run indefinitely witho
 There are three ways you can consume this library in your GitHub actions
 ### Dummy Commit Keepalive Workflow (For GitHub Actions users)
 You can just include the library as a step after one of your favorite GitHub actions. Your workflow file should have the checkout action defined in one of your steps since this library needs git CLI to work.
-
 ```yaml
 name: Github Action with a cronjob trigger
 on:
@@ -33,6 +32,34 @@ jobs:
       # - step n, use it as the last step
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
 ```
+
+Moving the keepalive workflow into its own distinct job is strongly recommended for better security. For example:
+```yaml
+name: Github Action with a cronjob trigger
+on:
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  main-job:
+    name: Main Job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # - step1
+      # - step 2
+      # - Step N
+  keepalive-job:
+    name: Keepalive Workflow
+    if: ${{ always() }}
+    needs: main-job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v1
+```
+
 <details>
   <summary>Let's take an example of [Waka Readme](https://github.com/athul/waka-readme)</summary>
 
@@ -75,6 +102,33 @@ jobs:
       # - step 2
       # - step n, use it as the last step
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow in api mode
+        with:
+          use_api: true
+```
+
+Moving the keepalive workflow into its own distinct job is strongly recommended here as well, for better security:
+```yaml
+name: Github Action with a cronjob trigger
+on:
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  main-job:
+    name: Main Job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # - step1
+      # - step 2
+      # - Step N
+  keepalive-job:
+    name: Keepalive Workflow
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v1
         with:
           use_api: true
 ```
