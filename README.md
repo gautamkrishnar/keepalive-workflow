@@ -20,7 +20,8 @@ name: Github Action with a cronjob trigger
 on:
   schedule:
     - cron: "0 0 * * *"
-
+  permissions:
+    contents: write
 jobs:
   cronjob-based-github-action:
     name: Cronjob based github action
@@ -32,9 +33,6 @@ jobs:
       # - step n, use it as the last step
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
 ```
-Go to repository settings, Click on Actions > General. Update the "Workflow permissions" to "Read and write permissions". Click on save.
-    
-   ![Workflow permissions](https://github.com/gautamkrishnar/blog-post-workflow/assets/8397274/26d4c089-dc58-4309-b65a-2acb9a3c08ba)
 <details>
   <summary>Let's take an example of [Waka Readme](https://github.com/athul/waka-readme)</summary>
 
@@ -60,18 +58,14 @@ jobs:
 </details>
 
 ### GitHub API Keepalive Workflow (For GitHub Actions users)
-If you do not want dummy  commits in your repository's commit history, you can use the library's GitHub API mode. 
-
-1. Make sure that you create a fine graded token with `actions:write` permission or a PAT with `workflow` permission. You can create it [here](https://github.com/settings/personal-access-tokens/new) and [here](https://github.com/settings/tokens/new)  respectively.
-2. Go to settings page in your repo and create a secret with name `PAT_TOKEN` and use the previously created token as the value. Refer [docs](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
-2. Use the code from the following example. Your workflow file should have the checkout action defined in one of your steps since this library needs git CLI to work.
-
+If you do not want dummy  commits in your repository's commit history, you can use the library's GitHub API mode. Use the following yaml file.
 ```yaml
 name: Github Action with a cronjob trigger
 on:
   schedule:
     - cron: "0 0 * * *"
-
+  permissions:
+    actions: write
 jobs:
   cronjob-based-github-action:
     name: Cronjob based github action
@@ -83,7 +77,6 @@ jobs:
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow in api mode
         with:
           use_api: true
-          gh_token: ${{ secrets.PAT_TOKEN }}
 ```
 
 ### Using via NPM (For GitHub Actions developers)
@@ -134,16 +127,16 @@ APIKeepAliveWorkflow(githubToken, {
 ### For GitHub Action
 If you use the workflow as mentioned via GitHub actions following are the options available to you to customize its behavior.
 
-| Option | Default Value | Description                                                                                                                                                                                                                                                                                  | Required |
-|--------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
-| `gh_token` | your default GitHub token with repo scope | GitHub access token with Repo scope                                                                                                                                                                                                                                                          | No |
-| `commit_message` | `Automated commit by Keepalive Workflow to keep the repository active` | Commit message used while committing to the repo                                                                                                                                                                                                                                             | No  |
-| `committer_username` | `gkr-bot` | Username used while committing to the repo                                                                                                                                                                                                                                                   | No |
-| `committer_email` | `gkr@tuta.io` | Email id used while committing to the repo                                                                                                                                                                                                                                                   | No |
-| `time_elapsed` | `50` | Time elapsed from the previous commit to trigger a new automated commit (in days)                                                                                                                                                                                                            | No |
-| `auto_push` | `true` | Defines if the workflow pushes the changes automatically                                                                                                                                                                                                                                     | No |
-| `auto_write_check` | `false` | Specifies whether the workflow will verify the repository's write access privilege for the token before executing                                                                                                                                                                            | No |
-| `use_api` | `false` | Instead of using dummy commits, workflow uses GitHub API to keep the repository active. This will keep your commit history clean. Make sure you set the `gh_token` parameter with a token which has `actions:write` permission enabled. This wont work with the default GitHub actions token | No |
+| Option | Default Value | Description                                                                                                                                                                                                                                                                                                                         | Required |
+|--------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| `gh_token` | your default GitHub token with repo scope | GitHub access token with Repo scope                                                                                                                                                                                                                                                                                                 | No |
+| `commit_message` | `Automated commit by Keepalive Workflow to keep the repository active` | Commit message used while committing to the repo                                                                                                                                                                                                                                                                                    | No  |
+| `committer_username` | `gkr-bot` | Username used while committing to the repo                                                                                                                                                                                                                                                                                          | No |
+| `committer_email` | `gkr@tuta.io` | Email id used while committing to the repo                                                                                                                                                                                                                                                                                          | No |
+| `time_elapsed` | `50` | Time elapsed from the previous commit to trigger a new automated commit (in days)                                                                                                                                                                                                                                                   | No |
+| `auto_push` | `true` | Defines if the workflow pushes the changes automatically                                                                                                                                                                                                                                                                            | No |
+| `auto_write_check` | `false` | Specifies whether the workflow will verify the repository's write access privilege for the token before executing                                                                                                                                                                                                                   | No |
+| `use_api` | `false` | Instead of using dummy commits, workflow uses GitHub API to keep the repository active. | No |
 
 
 ### For Javascript Library
