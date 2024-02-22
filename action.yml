@@ -32,7 +32,7 @@ inputs:
     default: "false"
     required: false
   use_api:
-    description: "Instead of using dummy commits, workflow uses GitHub API to keep the repository active. This will keep your commit history clean. Make sure you set a gh_token with actions:write permission. This wont work with the default GitHub actions token"
+    description: "Instead of using dummy commits, workflow uses GitHub API to keep the repository active. This will keep your commit history clean. Make sure you set a gh_token with actions:write permission."
     default: "false"
     required: false
 
