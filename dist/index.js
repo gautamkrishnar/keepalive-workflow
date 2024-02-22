@@ -36,11 +36,11 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var require_util = __commonJS({
   "util.js"(exports2, module2) {
     var { spawn } = require("child_process");
-    var execute = (cmd, args = [], options2 = {}) => new Promise((resolve, reject) => {
+    var execute = (cmd, args = [], options = {}) => new Promise((resolve, reject) => {
       let outputData = "";
       let errorData = "";
       const optionsToCLI = {
-        ...options2
+        ...options
       };
       if (!optionsToCLI.stdio) {
         Object.assign(optionsToCLI, { stdio: ["pipe", "pipe", "pipe"] });
@@ -111,24 +111,24 @@ var require_dist_node = __commonJS({
 var require_register = __commonJS({
   "node_modules/before-after-hook/lib/register.js"(exports2, module2) {
     module2.exports = register;
-    function register(state, name, method, options2) {
+    function register(state, name, method, options) {
       if (typeof method !== "function") {
         throw new Error("method for before hook must be a function");
       }
-      if (!options2) {
-        options2 = {};
+      if (!options) {
+        options = {};
       }
       if (Array.isArray(name)) {
         return name.reverse().reduce(function(callback, name2) {
-          return register.bind(null, state, name2, callback, options2);
+          return register.bind(null, state, name2, callback, options);
         }, method)();
       }
       return Promise.resolve().then(function() {
         if (!state.registry[name]) {
-          return method(options2);
+          return method(options);
         }
         return state.registry[name].reduce(function(method2, registered) {
-          return registered.hook.bind(null, method2, options2);
+          return registered.hook.bind(null, method2, options);
         }, method)();
       });
     }
@@ -145,25 +145,25 @@ var require_add = __commonJS({
         state.registry[name] = [];
       }
       if (kind === "before") {
-        hook = function(method, options2) {
-          return Promise.resolve().then(orig.bind(null, options2)).then(method.bind(null, options2));
+        hook = function(method, options) {
+          return Promise.resolve().then(orig.bind(null, options)).then(method.bind(null, options));
         };
       }
       if (kind === "after") {
-        hook = function(method, options2) {
+        hook = function(method, options) {
           var result;
-          return Promise.resolve().then(method.bind(null, options2)).then(function(result_) {
+          return Promise.resolve().then(method.bind(null, options)).then(function(result_) {
             result = result_;
-            return orig(result, options2);
+            return orig(result, options);
           }).then(function() {
             return result;
           });
         };
       }
       if (kind === "error") {
-        hook = function(method, options2) {
-          return Promise.resolve().then(method.bind(null, options2)).catch(function(error) {
-            return orig(error, options2);
+        hook = function(method, options) {
+          return Promise.resolve().then(method.bind(null, options)).catch(function(error) {
+            return orig(error, options);
           });
         };
       }
@@ -310,16 +310,16 @@ var require_dist_node2 = __commonJS({
       const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
       return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
     }
-    function mergeDeep(defaults, options2) {
+    function mergeDeep(defaults, options) {
       const result = Object.assign({}, defaults);
-      Object.keys(options2).forEach((key) => {
-        if (isPlainObject(options2[key])) {
+      Object.keys(options).forEach((key) => {
+        if (isPlainObject(options[key])) {
           if (!(key in defaults))
-            Object.assign(result, { [key]: options2[key] });
+            Object.assign(result, { [key]: options[key] });
           else
-            result[key] = mergeDeep(defaults[key], options2[key]);
+            result[key] = mergeDeep(defaults[key], options[key]);
         } else {
-          Object.assign(result, { [key]: options2[key] });
+          Object.assign(result, { [key]: options[key] });
         }
       });
       return result;
@@ -332,18 +332,18 @@ var require_dist_node2 = __commonJS({
       }
       return obj;
     }
-    function merge(defaults, route, options2) {
+    function merge(defaults, route, options) {
       if (typeof route === "string") {
         let [method, url] = route.split(" ");
-        options2 = Object.assign(url ? { method, url } : { url: method }, options2);
+        options = Object.assign(url ? { method, url } : { url: method }, options);
       } else {
-        options2 = Object.assign({}, route);
+        options = Object.assign({}, route);
       }
-      options2.headers = lowercaseKeys(options2.headers);
-      removeUndefinedProperties(options2);
-      removeUndefinedProperties(options2.headers);
-      const mergedOptions = mergeDeep(defaults || {}, options2);
-      if (options2.url === "/graphql") {
+      options.headers = lowercaseKeys(options.headers);
+      removeUndefinedProperties(options);
+      removeUndefinedProperties(options.headers);
+      const mergedOptions = mergeDeep(defaults || {}, options);
+      if (options.url === "/graphql") {
         if (defaults && defaults.mediaType.previews?.length) {
           mergedOptions.mediaType.previews = defaults.mediaType.previews.filter(
             (preview) => !mergedOptions.mediaType.previews.includes(preview)
@@ -516,12 +516,12 @@ var require_dist_node2 = __commonJS({
         return template.replace(/\/$/, "");
       }
     }
-    function parse2(options2) {
-      let method = options2.method.toUpperCase();
-      let url = (options2.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
-      let headers = Object.assign({}, options2.headers);
+    function parse2(options) {
+      let method = options.method.toUpperCase();
+      let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
+      let headers = Object.assign({}, options.headers);
       let body;
-      let parameters = omit(options2, [
+      let parameters = omit(options, [
         "method",
         "baseUrl",
         "url",
@@ -532,25 +532,25 @@ var require_dist_node2 = __commonJS({
       const urlVariableNames = extractUrlVariableNames(url);
       url = parseUrl(url).expand(parameters);
       if (!/^http/.test(url)) {
-        url = options2.baseUrl + url;
+        url = options.baseUrl + url;
       }
-      const omittedParameters = Object.keys(options2).filter((option) => urlVariableNames.includes(option)).concat("baseUrl");
+      const omittedParameters = Object.keys(options).filter((option) => urlVariableNames.includes(option)).concat("baseUrl");
       const remainingParameters = omit(parameters, omittedParameters);
       const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
       if (!isBinaryRequest) {
-        if (options2.mediaType.format) {
+        if (options.mediaType.format) {
           headers.accept = headers.accept.split(/,/).map(
             (format) => format.replace(
               /application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/,
-              `application/vnd$1$2.${options2.mediaType.format}`
+              `application/vnd$1$2.${options.mediaType.format}`
             )
           ).join(",");
         }
         if (url.endsWith("/graphql")) {
-          if (options2.mediaType.previews?.length) {
+          if (options.mediaType.previews?.length) {
             const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
-            headers.accept = previewsFromAcceptHeader.concat(options2.mediaType.previews).map((preview) => {
-              const format = options2.mediaType.format ? `.${options2.mediaType.format}` : "+json";
+            headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
+              const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
               return `application/vnd.github.${preview}-preview${format}`;
             }).join(",");
           }
@@ -576,11 +576,11 @@ var require_dist_node2 = __commonJS({
       return Object.assign(
         { method, url, headers },
         typeof body !== "undefined" ? { body } : null,
-        options2.request ? { request: options2.request } : null
+        options.request ? { request: options.request } : null
       );
     }
-    function endpointWithDefaults(defaults, route, options2) {
-      return parse2(merge(defaults, route, options2));
+    function endpointWithDefaults(defaults, route, options) {
+      return parse2(merge(defaults, route, options));
     }
     function withDefaults(oldDefaults, newDefaults) {
       const DEFAULTS2 = merge(oldDefaults, newDefaults);
@@ -731,7 +731,7 @@ var require_dist_node4 = __commonJS({
     var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
     var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
     var RequestError = class extends Error {
-      constructor(message, statusCode, options2) {
+      constructor(message, statusCode, options) {
         super(message);
         if (Error.captureStackTrace) {
           Error.captureStackTrace(this, this.constructor);
@@ -739,17 +739,17 @@ var require_dist_node4 = __commonJS({
         this.name = "HttpError";
         this.status = statusCode;
         let headers;
-        if ("headers" in options2 && typeof options2.headers !== "undefined") {
-          headers = options2.headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
         }
-        if ("response" in options2) {
-          this.response = options2.response;
-          headers = options2.response.headers;
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
         }
-        const requestCopy = Object.assign({}, options2.request);
-        if (options2.request.headers.authorization) {
-          requestCopy.headers = Object.assign({}, options2.request.headers, {
-            authorization: options2.request.headers.authorization.replace(
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+          requestCopy.headers = Object.assign({}, options.request.headers, {
+            authorization: options.request.headers.authorization.replace(
               / .*$/,
               " [REDACTED]"
             )
@@ -1053,14 +1053,14 @@ var require_dist_node6 = __commonJS({
     ];
     var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
     var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
-    function graphql(request2, query, options2) {
-      if (options2) {
-        if (typeof query === "string" && "query" in options2) {
+    function graphql(request2, query, options) {
+      if (options) {
+        if (typeof query === "string" && "query" in options) {
           return Promise.reject(
             new Error(`[@octokit/graphql] "query" cannot be used as variable name`)
           );
         }
-        for (const key in options2) {
+        for (const key in options) {
           if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
             continue;
           return Promise.reject(
@@ -1070,7 +1070,7 @@ var require_dist_node6 = __commonJS({
           );
         }
       }
-      const parsedOptions = typeof query === "string" ? Object.assign({ query }, options2) : query;
+      const parsedOptions = typeof query === "string" ? Object.assign({ query }, options) : query;
       const requestOptions = Object.keys(
         parsedOptions
       ).reduce((result, key) => {
@@ -1105,8 +1105,8 @@ var require_dist_node6 = __commonJS({
     }
     function withDefaults(request2, newDefaults) {
       const newRequest = request2.defaults(newDefaults);
-      const newApi = (query, options2) => {
-        return graphql(newRequest, query, options2);
+      const newApi = (query, options) => {
+        return graphql(newRequest, query, options);
       };
       return Object.assign(newApi, {
         defaults: withDefaults.bind(null, newRequest),
@@ -1244,18 +1244,18 @@ var require_dist_node8 = __commonJS({
       static defaults(defaults) {
         const OctokitWithDefaults = class extends this {
           constructor(...args) {
-            const options2 = args[0] || {};
+            const options = args[0] || {};
             if (typeof defaults === "function") {
-              super(defaults(options2));
+              super(defaults(options));
               return;
             }
             super(
               Object.assign(
                 {},
                 defaults,
-                options2,
-                options2.userAgent && defaults.userAgent ? {
-                  userAgent: `${options2.userAgent} ${defaults.userAgent}`
+                options,
+                options.userAgent && defaults.userAgent ? {
+                  userAgent: `${options.userAgent} ${defaults.userAgent}`
                 } : null
               )
             );
@@ -1283,12 +1283,12 @@ var require_dist_node8 = __commonJS({
         };
         return NewOctokit;
       }
-      constructor(options2 = {}) {
+      constructor(options = {}) {
         const hook = new import_before_after_hook.Collection();
         const requestDefaults = {
           baseUrl: import_request.request.endpoint.DEFAULTS.baseUrl,
           headers: {},
-          request: Object.assign({}, options2.request, {
+          request: Object.assign({}, options.request, {
             // @ts-ignore internal usage only, no need to type
             hook: hook.bind(null, "request")
           }),
@@ -1297,15 +1297,15 @@ var require_dist_node8 = __commonJS({
             format: ""
           }
         };
-        requestDefaults.headers["user-agent"] = options2.userAgent ? `${options2.userAgent} ${userAgentTrail}` : userAgentTrail;
-        if (options2.baseUrl) {
-          requestDefaults.baseUrl = options2.baseUrl;
+        requestDefaults.headers["user-agent"] = options.userAgent ? `${options.userAgent} ${userAgentTrail}` : userAgentTrail;
+        if (options.baseUrl) {
+          requestDefaults.baseUrl = options.baseUrl;
         }
-        if (options2.previews) {
-          requestDefaults.mediaType.previews = options2.previews;
+        if (options.previews) {
+          requestDefaults.mediaType.previews = options.previews;
         }
-        if (options2.timeZone) {
-          requestDefaults.headers["time-zone"] = options2.timeZone;
+        if (options.timeZone) {
+          requestDefaults.headers["time-zone"] = options.timeZone;
         }
         this.request = import_request.request.defaults(requestDefaults);
         this.graphql = (0, import_graphql.withCustomRequest)(this.request).defaults(requestDefaults);
@@ -1316,21 +1316,21 @@ var require_dist_node8 = __commonJS({
             warn: consoleWarn,
             error: consoleError
           },
-          options2.log
+          options.log
         );
         this.hook = hook;
-        if (!options2.authStrategy) {
-          if (!options2.auth) {
+        if (!options.authStrategy) {
+          if (!options.auth) {
             this.auth = async () => ({
               type: "unauthenticated"
             });
           } else {
-            const auth = (0, import_auth_token.createTokenAuth)(options2.auth);
+            const auth = (0, import_auth_token.createTokenAuth)(options.auth);
             hook.wrap("request", auth.hook);
             this.auth = auth;
           }
         } else {
-          const { authStrategy, ...otherOptions } = options2;
+          const { authStrategy, ...otherOptions } = options;
           const auth = authStrategy(
             Object.assign(
               {
@@ -1344,7 +1344,7 @@ var require_dist_node8 = __commonJS({
                 octokit: this,
                 octokitOptions: otherOptions
               },
-              options2.auth
+              options.auth
             )
           );
           hook.wrap("request", auth.hook);
@@ -1352,7 +1352,7 @@ var require_dist_node8 = __commonJS({
         }
         const classConstructor = this.constructor;
         for (let i = 0; i < classConstructor.plugins.length; ++i) {
-          Object.assign(this, classConstructor.plugins[i](this, options2));
+          Object.assign(this, classConstructor.plugins[i](this, options));
         }
       }
     };
@@ -1387,12 +1387,12 @@ var require_dist_node9 = __commonJS({
     module2.exports = __toCommonJS2(dist_src_exports);
     var VERSION = "4.0.0";
     function requestLog(octokit) {
-      octokit.hook.wrap("request", (request, options2) => {
-        octokit.log.debug("request", options2);
+      octokit.hook.wrap("request", (request, options) => {
+        octokit.log.debug("request", options);
         const start = Date.now();
-        const requestOptions = octokit.request.endpoint.parse(options2);
-        const path = requestOptions.url.replace(options2.baseUrl, "");
-        return request(options2).then((response) => {
+        const requestOptions = octokit.request.endpoint.parse(options);
+        const path = requestOptions.url.replace(options.baseUrl, "");
+        return request(options).then((response) => {
           octokit.log.info(
             `${requestOptions.method} ${path} - ${response.status} in ${Date.now() - start}ms`
           );
@@ -1468,11 +1468,11 @@ var require_dist_node10 = __commonJS({
       return response;
     }
     function iterator(octokit, route, parameters) {
-      const options2 = typeof route === "function" ? route.endpoint(parameters) : octokit.request.endpoint(route, parameters);
+      const options = typeof route === "function" ? route.endpoint(parameters) : octokit.request.endpoint(route, parameters);
       const requestMethod = typeof route === "function" ? route : octokit.request;
-      const method = options2.method;
-      const headers = options2.headers;
-      let url = options2.url;
+      const method = options.method;
+      const headers = options.headers;
+      let url = options.url;
       return {
         [Symbol.asyncIterator]: () => ({
           async next() {
@@ -3841,13 +3841,13 @@ var require_dist_node11 = __commonJS({
     function decorate(octokit, scope, methodName, defaults, decorations) {
       const requestWithDefaults = octokit.request.defaults(defaults);
       function withDecorations(...args) {
-        let options2 = requestWithDefaults.endpoint.merge(...args);
+        let options = requestWithDefaults.endpoint.merge(...args);
         if (decorations.mapToData) {
-          options2 = Object.assign({}, options2, {
-            data: options2[decorations.mapToData],
+          options = Object.assign({}, options, {
+            data: options[decorations.mapToData],
             [decorations.mapToData]: void 0
           });
-          return requestWithDefaults(options2);
+          return requestWithDefaults(options);
         }
         if (decorations.renamed) {
           const [newScope, newMethodName] = decorations.renamed;
@@ -3859,21 +3859,21 @@ var require_dist_node11 = __commonJS({
           octokit.log.warn(decorations.deprecated);
         }
         if (decorations.renamedParameters) {
-          const options22 = requestWithDefaults.endpoint.merge(...args);
+          const options2 = requestWithDefaults.endpoint.merge(...args);
           for (const [name, alias] of Object.entries(
             decorations.renamedParameters
           )) {
-            if (name in options22) {
+            if (name in options2) {
               octokit.log.warn(
                 `"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias}" instead`
               );
-              if (!(alias in options22)) {
-                options22[alias] = options22[name];
+              if (!(alias in options2)) {
+                options2[alias] = options2[name];
               }
-              delete options22[name];
+              delete options2[name];
             }
           }
-          return requestWithDefaults(options22);
+          return requestWithDefaults(options2);
         }
         return requestWithDefaults(...args);
       }
@@ -3989,7 +3989,12 @@ var require_library = __commonJS({
         }
       });
     };
-    var APIKeepAliveWorkflow2 = (githubToken2, { workflowFile = null, apiBaseUrl = process.env.GITHUB_API_URL, timeElapsed: timeElapsed2 = 50, autoWriteCheck: autoWriteCheck2 = false } = options = {}) => {
+    var APIKeepAliveWorkflow2 = (githubToken2, {
+      workflowFile = null,
+      apiBaseUrl = !!process.env.GITHUB_API_URL ? process.env.GITHUB_API_URL : "https://api.github.com",
+      timeElapsed: timeElapsed2 = 50,
+      autoWriteCheck: autoWriteCheck2 = false
+    } = {}) => {
       return new Promise(async (resolve, reject) => {
         try {
           writeDetectionCheck(autoWriteCheck2, reject);
@@ -4200,14 +4205,14 @@ var init_stringify = __esm({
 });
 
 // node_modules/uuid/dist/esm-node/v1.js
-function v1(options2, buf, offset) {
+function v1(options, buf, offset) {
   let i = buf && offset || 0;
   const b = buf || new Array(16);
-  options2 = options2 || {};
-  let node = options2.node || _nodeId;
-  let clockseq = options2.clockseq !== void 0 ? options2.clockseq : _clockseq;
+  options = options || {};
+  let node = options.node || _nodeId;
+  let clockseq = options.clockseq !== void 0 ? options.clockseq : _clockseq;
   if (node == null || clockseq == null) {
-    const seedBytes = options2.random || (options2.rng || rng)();
+    const seedBytes = options.random || (options.rng || rng)();
     if (node == null) {
       node = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
     }
@@ -4215,13 +4220,13 @@ function v1(options2, buf, offset) {
       clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
     }
   }
-  let msecs = options2.msecs !== void 0 ? options2.msecs : Date.now();
-  let nsecs = options2.nsecs !== void 0 ? options2.nsecs : _lastNSecs + 1;
+  let msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+  let nsecs = options.nsecs !== void 0 ? options.nsecs : _lastNSecs + 1;
   const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
-  if (dt < 0 && options2.clockseq === void 0) {
+  if (dt < 0 && options.clockseq === void 0) {
     clockseq = clockseq + 1 & 16383;
   }
-  if ((dt < 0 || msecs > _lastMSecs) && options2.nsecs === void 0) {
+  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === void 0) {
     nsecs = 0;
   }
   if (nsecs >= 1e4) {
@@ -4374,9 +4379,9 @@ var init_v3 = __esm({
 });
 
 // node_modules/uuid/dist/esm-node/v4.js
-function v4(options2, buf, offset) {
-  options2 = options2 || {};
-  const rnds = options2.random || (options2.rng || rng)();
+function v4(options, buf, offset) {
+  options = options || {};
+  const rnds = options.random || (options.rng || rng)();
   rnds[6] = rnds[6] & 15 | 64;
   rnds[8] = rnds[8] & 63 | 128;
   if (buf) {
@@ -4625,42 +4630,42 @@ var require_tunnel = __commonJS({
     exports2.httpsOverHttp = httpsOverHttp;
     exports2.httpOverHttps = httpOverHttps;
     exports2.httpsOverHttps = httpsOverHttps;
-    function httpOverHttp(options2) {
-      var agent = new TunnelingAgent(options2);
+    function httpOverHttp(options) {
+      var agent = new TunnelingAgent(options);
       agent.request = http.request;
       return agent;
     }
-    function httpsOverHttp(options2) {
-      var agent = new TunnelingAgent(options2);
+    function httpsOverHttp(options) {
+      var agent = new TunnelingAgent(options);
       agent.request = http.request;
       agent.createSocket = createSecureSocket;
       agent.defaultPort = 443;
       return agent;
     }
-    function httpOverHttps(options2) {
-      var agent = new TunnelingAgent(options2);
+    function httpOverHttps(options) {
+      var agent = new TunnelingAgent(options);
       agent.request = https.request;
       return agent;
     }
-    function httpsOverHttps(options2) {
-      var agent = new TunnelingAgent(options2);
+    function httpsOverHttps(options) {
+      var agent = new TunnelingAgent(options);
       agent.request = https.request;
       agent.createSocket = createSecureSocket;
       agent.defaultPort = 443;
       return agent;
     }
-    function TunnelingAgent(options2) {
+    function TunnelingAgent(options) {
       var self = this;
-      self.options = options2 || {};
+      self.options = options || {};
       self.proxyOptions = self.options.proxy || {};
       self.maxSockets = self.options.maxSockets || http.Agent.defaultMaxSockets;
       self.requests = [];
       self.sockets = [];
       self.on("free", function onFree(socket, host, port, localAddress) {
-        var options3 = toOptions(host, port, localAddress);
+        var options2 = toOptions(host, port, localAddress);
         for (var i = 0, len = self.requests.length; i < len; ++i) {
           var pending = self.requests[i];
-          if (pending.host === options3.host && pending.port === options3.port) {
+          if (pending.host === options2.host && pending.port === options2.port) {
             self.requests.splice(i, 1);
             pending.request.onSocket(socket);
             return;
@@ -4673,18 +4678,18 @@ var require_tunnel = __commonJS({
     util.inherits(TunnelingAgent, events.EventEmitter);
     TunnelingAgent.prototype.addRequest = function addRequest(req, host, port, localAddress) {
       var self = this;
-      var options2 = mergeOptions({ request: req }, self.options, toOptions(host, port, localAddress));
+      var options = mergeOptions({ request: req }, self.options, toOptions(host, port, localAddress));
       if (self.sockets.length >= this.maxSockets) {
-        self.requests.push(options2);
+        self.requests.push(options);
         return;
       }
-      self.createSocket(options2, function(socket) {
+      self.createSocket(options, function(socket) {
         socket.on("free", onFree);
         socket.on("close", onCloseOrRemove);
         socket.on("agentRemove", onCloseOrRemove);
         req.onSocket(socket);
         function onFree() {
-          self.emit("free", socket, options2);
+          self.emit("free", socket, options);
         }
         function onCloseOrRemove(err) {
           self.removeSocket(socket);
@@ -4694,20 +4699,20 @@ var require_tunnel = __commonJS({
         }
       });
     };
-    TunnelingAgent.prototype.createSocket = function createSocket(options2, cb) {
+    TunnelingAgent.prototype.createSocket = function createSocket(options, cb) {
       var self = this;
       var placeholder = {};
       self.sockets.push(placeholder);
       var connectOptions = mergeOptions({}, self.proxyOptions, {
         method: "CONNECT",
-        path: options2.host + ":" + options2.port,
+        path: options.host + ":" + options.port,
         agent: false,
         headers: {
-          host: options2.host + ":" + options2.port
+          host: options.host + ":" + options.port
         }
       });
-      if (options2.localAddress) {
-        connectOptions.localAddress = options2.localAddress;
+      if (options.localAddress) {
+        connectOptions.localAddress = options.localAddress;
       }
       if (connectOptions.proxyAuth) {
         connectOptions.headers = connectOptions.headers || {};
@@ -4740,7 +4745,7 @@ var require_tunnel = __commonJS({
           socket.destroy();
           var error = new Error("tunneling socket could not be established, statusCode=" + res.statusCode);
           error.code = "ECONNRESET";
-          options2.request.emit("error", error);
+          options.request.emit("error", error);
           self.removeSocket(placeholder);
           return;
         }
@@ -4749,7 +4754,7 @@ var require_tunnel = __commonJS({
           socket.destroy();
           var error = new Error("got illegal response body from proxy");
           error.code = "ECONNRESET";
-          options2.request.emit("error", error);
+          options.request.emit("error", error);
           self.removeSocket(placeholder);
           return;
         }
@@ -4766,7 +4771,7 @@ var require_tunnel = __commonJS({
         );
         var error = new Error("tunneling socket could not be established, cause=" + cause.message);
         error.code = "ECONNRESET";
-        options2.request.emit("error", error);
+        options.request.emit("error", error);
         self.removeSocket(placeholder);
       }
     };
@@ -4783,13 +4788,13 @@ var require_tunnel = __commonJS({
         });
       }
     };
-    function createSecureSocket(options2, cb) {
+    function createSecureSocket(options, cb) {
       var self = this;
-      TunnelingAgent.prototype.createSocket.call(self, options2, function(socket) {
-        var hostHeader = options2.request.getHeader("host");
+      TunnelingAgent.prototype.createSocket.call(self, options, function(socket) {
+        var hostHeader = options.request.getHeader("host");
         var tlsOptions = mergeOptions({}, self.options, {
           socket,
-          servername: hostHeader ? hostHeader.replace(/:.*$/, "") : options2.host
+          servername: hostHeader ? hostHeader.replace(/:.*$/, "") : options.host
         });
         var secureSocket = tls.connect(0, tlsOptions);
         self.sockets[self.sockets.indexOf(socket)] = secureSocket;
@@ -7743,7 +7748,7 @@ var require_constants = __commonJS({
     var channel;
     var structuredClone = globalThis.structuredClone ?? // https://github.com/nodejs/node/blob/b27ae24dcc4251bad726d9d84baf678d1f707fed/lib/internal/structured_clone.js
     // structuredClone was added in v17.0.0, but fetch supports v16.8
-    function structuredClone2(value, options2 = void 0) {
+    function structuredClone2(value, options = void 0) {
       if (arguments.length === 0) {
         throw new TypeError("missing argument");
       }
@@ -7752,7 +7757,7 @@ var require_constants = __commonJS({
       }
       channel.port1.unref();
       channel.port2.unref();
-      channel.port1.postMessage(value, options2?.transfer);
+      channel.port1.postMessage(value, options?.transfer);
       return receiveMessageOnPort(channel.port2).message;
     };
     module2.exports = {
@@ -8610,8 +8615,8 @@ var require_webidl = __commonJS({
             message: `Expected ${dictionary} to be one of: Null, Undefined, Object.`
           });
         }
-        for (const options2 of converters) {
-          const { key, defaultValue, required, converter } = options2;
+        for (const options of converters) {
+          const { key, defaultValue, required, converter } = options;
           if (required === true) {
             if (!hasOwn(dictionary, key)) {
               throw webidl.errors.exception({
@@ -8621,16 +8626,16 @@ var require_webidl = __commonJS({
             }
           }
           let value = dictionary[key];
-          const hasDefault = hasOwn(options2, "defaultValue");
+          const hasDefault = hasOwn(options, "defaultValue");
           if (hasDefault && value !== null) {
             value = value ?? defaultValue;
           }
           if (required || hasDefault || value !== void 0) {
             value = converter(value);
-            if (options2.allowedValues && !options2.allowedValues.includes(value)) {
+            if (options.allowedValues && !options.allowedValues.includes(value)) {
               throw webidl.errors.exception({
                 header: "Dictionary",
-                message: `${value} is not an accepted type. Expected one of ${options2.allowedValues.join(", ")}.`
+                message: `${value} is not an accepted type. Expected one of ${options.allowedValues.join(", ")}.`
               });
             }
             dict[key] = value;
@@ -9068,13 +9073,13 @@ var require_file = __commonJS({
     var { kEnumerableProperty } = require_util2();
     var encoder = new TextEncoder();
     var File = class _File extends Blob2 {
-      constructor(fileBits, fileName, options2 = {}) {
+      constructor(fileBits, fileName, options = {}) {
         webidl.argumentLengthCheck(arguments, 2, { header: "File constructor" });
         fileBits = webidl.converters["sequence<BlobPart>"](fileBits);
         fileName = webidl.converters.USVString(fileName);
-        options2 = webidl.converters.FilePropertyBag(options2);
+        options = webidl.converters.FilePropertyBag(options);
         const n = fileName;
-        let t = options2.type;
+        let t = options.type;
         let d;
         substep: {
           if (t) {
@@ -9085,9 +9090,9 @@ var require_file = __commonJS({
             }
             t = serializeAMimeType(t).toLowerCase();
           }
-          d = options2.lastModified;
+          d = options.lastModified;
         }
-        super(processBlobParts(fileBits, options2), { type: t });
+        super(processBlobParts(fileBits, options), { type: t });
         this[kState] = {
           name: n,
           lastModified: d,
@@ -9108,10 +9113,10 @@ var require_file = __commonJS({
       }
     };
     var FileLike = class _FileLike {
-      constructor(blobLike, fileName, options2 = {}) {
+      constructor(blobLike, fileName, options = {}) {
         const n = fileName;
-        const t = options2.type;
-        const d = options2.lastModified ?? Date.now();
+        const t = options.type;
+        const d = options.lastModified ?? Date.now();
         this[kState] = {
           blobLike,
           name: n,
@@ -9204,12 +9209,12 @@ var require_file = __commonJS({
         defaultValue: "transparent"
       }
     ]);
-    function processBlobParts(parts, options2) {
+    function processBlobParts(parts, options) {
       const bytes = [];
       for (const element of parts) {
         if (typeof element === "string") {
           let s = element;
-          if (options2.endings === "native") {
+          if (options.endings === "native") {
             s = convertLineEndingsNative(s);
           }
           bytes.push(encoder.encode(s));
@@ -9384,11 +9389,11 @@ var require_formdata = __commonJS({
           value = value instanceof Blob2 ? new File([value], "blob", { type: value.type }) : new FileLike(value, "blob", { type: value.type });
         }
         if (filename !== void 0) {
-          const options2 = {
+          const options = {
             type: value.type,
             lastModified: value.lastModified
           };
-          value = NativeFile && value instanceof NativeFile || value instanceof UndiciFile ? new File([value], filename, options2) : new FileLike(value, filename, options2);
+          value = NativeFile && value instanceof NativeFile || value instanceof UndiciFile ? new File([value], filename, options) : new FileLike(value, filename, options);
         }
       }
       return { name, value };
@@ -10395,7 +10400,7 @@ var require_connect = __commonJS({
       if (maxCachedSessions != null && (!Number.isInteger(maxCachedSessions) || maxCachedSessions < 0)) {
         throw new InvalidArgumentError("maxCachedSessions must be a positive integer or zero");
       }
-      const options2 = { path: socketPath, ...opts };
+      const options = { path: socketPath, ...opts };
       const sessionCache = new SessionCache(maxCachedSessions == null ? 100 : maxCachedSessions);
       timeout = timeout == null ? 1e4 : timeout;
       allowH2 = allowH2 != null ? allowH2 : false;
@@ -10405,14 +10410,14 @@ var require_connect = __commonJS({
           if (!tls) {
             tls = require("tls");
           }
-          servername = servername || options2.servername || util.getServerName(host) || null;
+          servername = servername || options.servername || util.getServerName(host) || null;
           const sessionKey = servername || hostname;
           const session = sessionCache.get(sessionKey) || null;
           assert(sessionKey);
           socket = tls.connect({
             highWaterMark: 16384,
             // TLS in node can't have bigger HWM anyway...
-            ...options2,
+            ...options,
             servername,
             session,
             localAddress,
@@ -10431,14 +10436,14 @@ var require_connect = __commonJS({
           socket = net.connect({
             highWaterMark: 64 * 1024,
             // Same as nodejs fs streams.
-            ...options2,
+            ...options,
             localAddress,
             port: port || 80,
             host: hostname
           });
         }
-        if (options2.keepAlive == null || options2.keepAlive) {
-          const keepAliveInitialDelay = options2.keepAliveInitialDelay === void 0 ? 6e4 : options2.keepAliveInitialDelay;
+        if (options.keepAlive == null || options.keepAlive) {
+          const keepAliveInitialDelay = options.keepAliveInitialDelay === void 0 ? 6e4 : options.keepAliveInitialDelay;
           socket.setKeepAlive(true, keepAliveInitialDelay);
         }
         const cancelTimeout = setupTimeout(() => onConnectTimeout(socket), timeout);
@@ -12996,7 +13001,7 @@ var require_pool = __commonJS({
         autoSelectFamily,
         autoSelectFamilyAttemptTimeout,
         allowH2,
-        ...options2
+        ...options
       } = {}) {
         super();
         if (connections != null && (!Number.isFinite(connections) || connections < 0)) {
@@ -13019,11 +13024,11 @@ var require_pool = __commonJS({
             ...connect
           });
         }
-        this[kInterceptors] = options2.interceptors && options2.interceptors.Pool && Array.isArray(options2.interceptors.Pool) ? options2.interceptors.Pool : [];
+        this[kInterceptors] = options.interceptors && options.interceptors.Pool && Array.isArray(options.interceptors.Pool) ? options.interceptors.Pool : [];
         this[kConnections] = connections || null;
         this[kUrl] = util.parseOrigin(origin);
-        this[kOptions] = { ...util.deepClone(options2), connect, allowH2 };
-        this[kOptions].interceptors = options2.interceptors ? { ...options2.interceptors } : void 0;
+        this[kOptions] = { ...util.deepClone(options), connect, allowH2 };
+        this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kFactory] = factory;
       }
       [kGetDispatcher]() {
@@ -13244,7 +13249,7 @@ var require_agent = __commonJS({
       return opts && opts.connections === 1 ? new Client(origin, opts) : new Pool(origin, opts);
     }
     var Agent = class extends DispatcherBase {
-      constructor({ factory = defaultFactory, maxRedirections = 0, connect, ...options2 } = {}) {
+      constructor({ factory = defaultFactory, maxRedirections = 0, connect, ...options } = {}) {
         super();
         if (typeof factory !== "function") {
           throw new InvalidArgumentError("factory must be a function.");
@@ -13258,9 +13263,9 @@ var require_agent = __commonJS({
         if (connect && typeof connect !== "function") {
           connect = { ...connect };
         }
-        this[kInterceptors] = options2.interceptors && options2.interceptors.Agent && Array.isArray(options2.interceptors.Agent) ? options2.interceptors.Agent : [createRedirectInterceptor({ maxRedirections })];
-        this[kOptions] = { ...util.deepClone(options2), connect };
-        this[kOptions].interceptors = options2.interceptors ? { ...options2.interceptors } : void 0;
+        this[kInterceptors] = options.interceptors && options.interceptors.Agent && Array.isArray(options.interceptors.Agent) ? options.interceptors.Agent : [createRedirectInterceptor({ maxRedirections })];
+        this[kOptions] = { ...util.deepClone(options), connect };
+        this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kMaxRedirections] = maxRedirections;
         this[kFactory] = factory;
         this[kClients] = /* @__PURE__ */ new Map();
@@ -19012,27 +19017,27 @@ var require_cache = __commonJS({
         }
         this.#relevantRequestResponseList = arguments[1];
       }
-      async match(request, options2 = {}) {
+      async match(request, options = {}) {
         webidl.brandCheck(this, _Cache);
         webidl.argumentLengthCheck(arguments, 1, { header: "Cache.match" });
         request = webidl.converters.RequestInfo(request);
-        options2 = webidl.converters.CacheQueryOptions(options2);
-        const p = await this.matchAll(request, options2);
+        options = webidl.converters.CacheQueryOptions(options);
+        const p = await this.matchAll(request, options);
         if (p.length === 0) {
           return;
         }
         return p[0];
       }
-      async matchAll(request = void 0, options2 = {}) {
+      async matchAll(request = void 0, options = {}) {
         webidl.brandCheck(this, _Cache);
         if (request !== void 0)
           request = webidl.converters.RequestInfo(request);
-        options2 = webidl.converters.CacheQueryOptions(options2);
+        options = webidl.converters.CacheQueryOptions(options);
         let r = null;
         if (request !== void 0) {
           if (request instanceof Request) {
             r = request[kState];
-            if (r.method !== "GET" && !options2.ignoreMethod) {
+            if (r.method !== "GET" && !options.ignoreMethod) {
               return [];
             }
           } else if (typeof request === "string") {
@@ -19045,7 +19050,7 @@ var require_cache = __commonJS({
             responses.push(requestResponse[1]);
           }
         } else {
-          const requestResponses = this.#queryCache(r, options2);
+          const requestResponses = this.#queryCache(r, options);
           for (const requestResponse of requestResponses) {
             responses.push(requestResponse[1]);
           }
@@ -19248,15 +19253,15 @@ var require_cache = __commonJS({
         });
         return cacheJobPromise.promise;
       }
-      async delete(request, options2 = {}) {
+      async delete(request, options = {}) {
         webidl.brandCheck(this, _Cache);
         webidl.argumentLengthCheck(arguments, 1, { header: "Cache.delete" });
         request = webidl.converters.RequestInfo(request);
-        options2 = webidl.converters.CacheQueryOptions(options2);
+        options = webidl.converters.CacheQueryOptions(options);
         let r = null;
         if (request instanceof Request) {
           r = request[kState];
-          if (r.method !== "GET" && !options2.ignoreMethod) {
+          if (r.method !== "GET" && !options.ignoreMethod) {
             return false;
           }
         } else {
@@ -19267,7 +19272,7 @@ var require_cache = __commonJS({
         const operation = {
           type: "delete",
           request: r,
-          options: options2
+          options
         };
         operations.push(operation);
         const cacheJobPromise = createDeferredPromise();
@@ -19293,16 +19298,16 @@ var require_cache = __commonJS({
        * @param {import('../../types/cache').CacheQueryOptions} options
        * @returns {readonly Request[]}
        */
-      async keys(request = void 0, options2 = {}) {
+      async keys(request = void 0, options = {}) {
         webidl.brandCheck(this, _Cache);
         if (request !== void 0)
           request = webidl.converters.RequestInfo(request);
-        options2 = webidl.converters.CacheQueryOptions(options2);
+        options = webidl.converters.CacheQueryOptions(options);
         let r = null;
         if (request !== void 0) {
           if (request instanceof Request) {
             r = request[kState];
-            if (r.method !== "GET" && !options2.ignoreMethod) {
+            if (r.method !== "GET" && !options.ignoreMethod) {
               return [];
             }
           } else if (typeof request === "string") {
@@ -19316,7 +19321,7 @@ var require_cache = __commonJS({
             requests.push(requestResponse[0]);
           }
         } else {
-          const requestResponses = this.#queryCache(r, options2);
+          const requestResponses = this.#queryCache(r, options);
           for (const requestResponse of requestResponses) {
             requests.push(requestResponse[0]);
           }
@@ -19424,12 +19429,12 @@ var require_cache = __commonJS({
        * @param {requestResponseList} targetStorage
        * @returns {requestResponseList}
        */
-      #queryCache(requestQuery, options2, targetStorage) {
+      #queryCache(requestQuery, options, targetStorage) {
         const resultList = [];
         const storage = targetStorage ?? this.#relevantRequestResponseList;
         for (const requestResponse of storage) {
           const [cachedRequest, cachedResponse] = requestResponse;
-          if (this.#requestMatchesCachedItem(requestQuery, cachedRequest, cachedResponse, options2)) {
+          if (this.#requestMatchesCachedItem(requestQuery, cachedRequest, cachedResponse, options)) {
             resultList.push(requestResponse);
           }
         }
@@ -19443,17 +19448,17 @@ var require_cache = __commonJS({
        * @param {import('../../types/cache').CacheQueryOptions | undefined} options
        * @returns {boolean}
        */
-      #requestMatchesCachedItem(requestQuery, request, response = null, options2) {
+      #requestMatchesCachedItem(requestQuery, request, response = null, options) {
         const queryURL = new URL(requestQuery.url);
         const cachedURL = new URL(request.url);
-        if (options2?.ignoreSearch) {
+        if (options?.ignoreSearch) {
           cachedURL.search = "";
           queryURL.search = "";
         }
         if (!urlEquals(queryURL, cachedURL, true)) {
           return false;
         }
-        if (response == null || options2?.ignoreVary || !response.headersList.contains("vary")) {
+        if (response == null || options?.ignoreVary || !response.headersList.contains("vary")) {
           return true;
         }
         const fieldValues = getFieldValues(response.headersList.get("vary"));
@@ -19537,21 +19542,21 @@ var require_cachestorage = __commonJS({
           webidl.illegalConstructor();
         }
       }
-      async match(request, options2 = {}) {
+      async match(request, options = {}) {
         webidl.brandCheck(this, _CacheStorage);
         webidl.argumentLengthCheck(arguments, 1, { header: "CacheStorage.match" });
         request = webidl.converters.RequestInfo(request);
-        options2 = webidl.converters.MultiCacheQueryOptions(options2);
-        if (options2.cacheName != null) {
-          if (this.#caches.has(options2.cacheName)) {
-            const cacheList = this.#caches.get(options2.cacheName);
+        options = webidl.converters.MultiCacheQueryOptions(options);
+        if (options.cacheName != null) {
+          if (this.#caches.has(options.cacheName)) {
+            const cacheList = this.#caches.get(options.cacheName);
             const cache = new Cache(kConstruct, cacheList);
-            return await cache.match(request, options2);
+            return await cache.match(request, options);
           }
         } else {
           for (const cacheList of this.#caches.values()) {
             const cache = new Cache(kConstruct, cacheList);
-            const response = await cache.match(request, options2);
+            const response = await cache.match(request, options);
             if (response !== void 0) {
               return response;
             }
@@ -20486,7 +20491,7 @@ var require_connection = __commonJS({
       crypto4 = require("crypto");
     } catch {
     }
-    function establishWebSocketConnection(url, protocols, ws, onEstablish, options2) {
+    function establishWebSocketConnection(url, protocols, ws, onEstablish, options) {
       const requestURL = url;
       requestURL.protocol = url.protocol === "ws:" ? "http:" : "https:";
       const request = makeRequest({
@@ -20498,8 +20503,8 @@ var require_connection = __commonJS({
         cache: "no-store",
         redirect: "error"
       });
-      if (options2.headers) {
-        const headersList = new Headers(options2.headers)[kHeadersList];
+      if (options.headers) {
+        const headersList = new Headers(options.headers)[kHeadersList];
         request.headersList = headersList;
       }
       const keyValue = crypto4.randomBytes(16).toString("base64");
@@ -20512,7 +20517,7 @@ var require_connection = __commonJS({
       const controller = fetching({
         request,
         useParallelQueue: true,
-        dispatcher: options2.dispatcher ?? getGlobalDispatcher(),
+        dispatcher: options.dispatcher ?? getGlobalDispatcher(),
         processResponse(response) {
           if (response.type === "error" || response.status !== 101) {
             failWebsocketConnection(ws, "Received network error or non-101 status code.");
@@ -20948,9 +20953,9 @@ var require_websocket = __commonJS({
             code: "UNDICI-WS"
           });
         }
-        const options2 = webidl.converters["DOMString or sequence<DOMString> or WebSocketInit"](protocols);
+        const options = webidl.converters["DOMString or sequence<DOMString> or WebSocketInit"](protocols);
         url = webidl.converters.USVString(url);
-        protocols = options2.protocols;
+        protocols = options.protocols;
         const baseURL = getGlobalOrigin();
         let urlRecord;
         try {
@@ -20987,7 +20992,7 @@ var require_websocket = __commonJS({
           protocols,
           this,
           (response) => this.#onConnectionEstablished(response),
-          options2
+          options
         );
         this[kReadyState] = _WebSocket.CONNECTING;
         this[kBinaryType] = "blob";
@@ -21969,8 +21974,8 @@ var require_lib = __commonJS({
           this._proxyAgent = agent;
         }
         if (this._keepAlive && !agent) {
-          const options2 = { keepAlive: this._keepAlive, maxSockets };
-          agent = usingSsl ? new https.Agent(options2) : new http.Agent(options2);
+          const options = { keepAlive: this._keepAlive, maxSockets };
+          agent = usingSsl ? new https.Agent(options) : new http.Agent(options);
           this._agent = agent;
         }
         if (!agent) {
@@ -22010,7 +22015,7 @@ var require_lib = __commonJS({
           return new Promise((resolve) => setTimeout(() => resolve(), ms));
         });
       }
-      _processResponse(res, options2) {
+      _processResponse(res, options) {
         return __awaiter(this, void 0, void 0, function* () {
           return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             const statusCode = res.message.statusCode || 0;
@@ -22036,7 +22041,7 @@ var require_lib = __commonJS({
             try {
               contents = yield res.readBody();
               if (contents && contents.length > 0) {
-                if (options2 && options2.deserializeDates) {
+                if (options && options.deserializeDates) {
                   obj = JSON.parse(contents, dateTimeDeserializer);
                 } else {
                   obj = JSON.parse(contents);
@@ -22108,11 +22113,11 @@ var require_auth = __commonJS({
         this.username = username;
         this.password = password;
       }
-      prepareRequest(options2) {
-        if (!options2.headers) {
+      prepareRequest(options) {
+        if (!options.headers) {
           throw Error("The request has no headers");
         }
-        options2.headers["Authorization"] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString("base64")}`;
+        options.headers["Authorization"] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString("base64")}`;
       }
       // This handler cannot handle 401
       canHandleAuthentication() {
@@ -22131,11 +22136,11 @@ var require_auth = __commonJS({
       }
       // currently implements pre-authorization
       // TODO: support preAuth = false where it hooks on 401
-      prepareRequest(options2) {
-        if (!options2.headers) {
+      prepareRequest(options) {
+        if (!options.headers) {
           throw Error("The request has no headers");
         }
-        options2.headers["Authorization"] = `Bearer ${this.token}`;
+        options.headers["Authorization"] = `Bearer ${this.token}`;
       }
       // This handler cannot handle 401
       canHandleAuthentication() {
@@ -22154,11 +22159,11 @@ var require_auth = __commonJS({
       }
       // currently implements pre-authorization
       // TODO: support preAuth = false where it hooks on 401
-      prepareRequest(options2) {
-        if (!options2.headers) {
+      prepareRequest(options) {
+        if (!options.headers) {
           throw Error("The request has no headers");
         }
-        options2.headers["Authorization"] = `Basic ${Buffer.from(`PAT:${this.token}`).toString("base64")}`;
+        options.headers["Authorization"] = `Basic ${Buffer.from(`PAT:${this.token}`).toString("base64")}`;
       }
       // This handler cannot handle 401
       canHandleAuthentication() {
@@ -22361,9 +22366,9 @@ var require_summary = __commonJS({
        *
        * @returns {Promise<Summary>} summary instance
        */
-      write(options2) {
+      write(options) {
         return __awaiter(this, void 0, void 0, function* () {
-          const overwrite = !!(options2 === null || options2 === void 0 ? void 0 : options2.overwrite);
+          const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);
           const filePath = yield this.filePath();
           const writeFunc = overwrite ? writeFile : appendFile;
           yield writeFunc(filePath, this._buffer, { encoding: "utf8" });
@@ -22496,8 +22501,8 @@ var require_summary = __commonJS({
        *
        * @returns {Summary} summary instance
        */
-      addImage(src, alt, options2) {
-        const { width, height } = options2 || {};
+      addImage(src, alt, options) {
+        const { width, height } = options || {};
         const attrs = Object.assign(Object.assign({}, width && { width }), height && { height });
         const element = this.wrap("img", null, Object.assign({ src, alt }, attrs));
         return this.addRaw(element).addEOL();
@@ -22712,29 +22717,29 @@ var require_core = __commonJS({
       process.env["PATH"] = `${inputPath}${path.delimiter}${process.env["PATH"]}`;
     }
     exports2.addPath = addPath;
-    function getInput(name, options2) {
+    function getInput(name, options) {
       const val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
-      if (options2 && options2.required && !val) {
+      if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
       }
-      if (options2 && options2.trimWhitespace === false) {
+      if (options && options.trimWhitespace === false) {
         return val;
       }
       return val.trim();
     }
     exports2.getInput = getInput;
-    function getMultilineInput(name, options2) {
-      const inputs = getInput(name, options2).split("\n").filter((x) => x !== "");
-      if (options2 && options2.trimWhitespace === false) {
+    function getMultilineInput(name, options) {
+      const inputs = getInput(name, options).split("\n").filter((x) => x !== "");
+      if (options && options.trimWhitespace === false) {
         return inputs;
       }
       return inputs.map((input) => input.trim());
     }
     exports2.getMultilineInput = getMultilineInput;
-    function getBooleanInput(name, options2) {
+    function getBooleanInput(name, options) {
       const trueValue = ["true", "True", "TRUE"];
       const falseValue = ["false", "False", "FALSE"];
-      const val = getInput(name, options2);
+      const val = getInput(name, options);
       if (trueValue.includes(val))
         return true;
       if (falseValue.includes(val))
