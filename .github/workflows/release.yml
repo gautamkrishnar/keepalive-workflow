@@ -2,7 +2,7 @@ name: Publish release to GitHub
 on:
   workflow_run:
     workflows: ["Version bump"]
-    branches: [master]
+    branches: [version2]
     types:
       - completed
 jobs:
@@ -30,5 +30,5 @@ jobs:
         run: |
           git config user.name gkr-bot
           git config user.email gkr@tuta.io
-          git tag -fa v1 -m "Updated v1 tag with the latest code"
-          git push origin v1 --force
+          git tag -fa v2 -m "Updated v2 tag with the latest code"
+          git push origin v2 --force

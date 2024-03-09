@@ -7,13 +7,60 @@ GitHub will suspend the scheduled trigger for GitHub action workflows if there i
 ![preview](https://user-images.githubusercontent.com/8397274/105174930-4303e100-5b49-11eb-90ed-95a55697582f.png)
 
 ### What
-This workflow will automatically create a dummy commit (or use the GitHub API) in your repo if the last commit in your repo is 50 days (default) ago.
+This workflow will automatically use the GitHub API (or create a dummy commit) in your repo if the last commit in your repo is 50 days (default) ago.
 This will keep the cronjob trigger active so that it will run indefinitely without getting suspended by GitHub for inactivity.
 
 ## How to use
 There are three ways you can consume this library in your GitHub actions
-### Dummy Commit Keepalive Workflow (For GitHub Actions users)
+
+### GitHub API Keepalive Workflow - Default (For GitHub Actions users)
 You can just include the library as a step after one of your favorite GitHub actions. Your workflow file should have the checkout action defined in one of your steps since this library needs git CLI to work.
+```yaml
+name: Github Action with a cronjob trigger
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  permissions:
+    actions: write
+jobs:
+  cronjob-based-github-action:
+    name: Cronjob based github action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # - step 2
+      # - step n, use it as the last step
+      - uses: gautamkrishnar/keepalive-workflow@v2 # using the workflow with default settings
+```
+
+Moving the keepalive workflow into its own distinct job is strongly recommended for better security. For example:
+```yaml
+name: Github Action with a cronjob trigger
+on:
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  main-job:
+    name: Main Job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # - step1
+      # - step 2
+      # - Step N
+  keepalive-job:
+    name: Keepalive Workflow
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
+```
+
+### Dummy Commit Keepalive Workflow (For GitHub Actions users)
+To use the workflow in auto commit mode you can use the following code, Please note that this will create empty commits in your repository every 50 days to keep it active.
+Use the default API based option instead for a clean Git commit history.
 ```yaml
 name: Github Action with a cronjob trigger
 on:
@@ -30,10 +77,13 @@ jobs:
       # - step1
       # - step 2
       # - step n, use it as the last step
-      - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
+      - uses: gautamkrishnar/keepalive-workflow@v2
+        with:
+          use_api: true
+
 ```
 
-Moving the keepalive workflow into its own distinct job is strongly recommended for better security. For example:
+Moving the keepalive workflow into its own distinct job is strongly recommended here as well, for better security:
 ```yaml
 name: Github Action with a cronjob trigger
 on:
@@ -57,7 +107,9 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: gautamkrishnar/keepalive-workflow@v1
+      - uses: gautamkrishnar/keepalive-workflow@v2
+        with:
+          use_api: false
 ```
 
 <details>
@@ -80,58 +132,9 @@ jobs:
       - uses: athul/waka-readme@master
         with:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-      - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
+      - uses: gautamkrishnar/keepalive-workflow@v2 # using the workflow
 ```
 </details>
-
-### GitHub API Keepalive Workflow (For GitHub Actions users)
-If you do not want dummy  commits in your repository's commit history, you can use the library's GitHub API mode. Use the following yaml file.
-```yaml
-name: Github Action with a cronjob trigger
-on:
-  schedule:
-    - cron: "0 0 * * *"
-  permissions:
-    actions: write
-jobs:
-  cronjob-based-github-action:
-    name: Cronjob based github action
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      # - step 2
-      # - step n, use it as the last step
-      - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow in api mode
-        with:
-          use_api: true
-```
-
-Moving the keepalive workflow into its own distinct job is strongly recommended here as well, for better security:
-```yaml
-name: Github Action with a cronjob trigger
-on:
-  schedule:
-    - cron: "0 0 * * *"
-jobs:
-  main-job:
-    name: Main Job
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      # - step1
-      # - step 2
-      # - Step N
-  keepalive-job:
-    name: Keepalive Workflow
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: gautamkrishnar/keepalive-workflow@v1
-        with:
-          use_api: true
-```
 
 ### Using via NPM (For GitHub Actions developers)
 For developers creating GitHub actions, you can consume the library in your javascript-based GitHub action by installing it from [NPM](https://www.npmjs.com/package/keepalive-workflow). Make sure that your GitHub action uses checkout action since this library needs it as a dependency.
@@ -181,21 +184,24 @@ APIKeepAliveWorkflow(githubToken, {
 ### For GitHub Action
 If you use the workflow as mentioned via GitHub actions following are the options available to you to customize its behavior.
 
-| Option | Default Value | Description                                                                                                                                                                                                                                                                                                                         | Required |
-|--------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
-| `gh_token` | your default GitHub token with repo scope | GitHub access token with Repo scope                                                                                                                                                                                                                                                                                                 | No |
-| `commit_message` | `Automated commit by Keepalive Workflow to keep the repository active` | Commit message used while committing to the repo                                                                                                                                                                                                                                                                                    | No  |
-| `committer_username` | `gkr-bot` | Username used while committing to the repo                                                                                                                                                                                                                                                                                          | No |
-| `committer_email` | `gkr@tuta.io` | Email id used while committing to the repo                                                                                                                                                                                                                                                                                          | No |
-| `time_elapsed` | `50` | Time elapsed from the previous commit to trigger a new automated commit (in days)                                                                                                                                                                                                                                                   | No |
-| `auto_push` | `true` | Defines if the workflow pushes the changes automatically                                                                                                                                                                                                                                                                            | No |
-| `auto_write_check` | `false` | Specifies whether the workflow will verify the repository's write access privilege for the token before executing                                                                                                                                                                                                                   | No |
-| `use_api` | `false` | Instead of using dummy commits, workflow uses GitHub API to keep the repository active. | No |
+| Option               | Default Value                                                          | Description                                                                                                       | Required |
+|----------------------|------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|----------|
+| `gh_token`           | your default GitHub token with repo scope                              | GitHub access token with Repo scope                                                                               | No       |
+| `commit_message`     | `Automated commit by Keepalive Workflow to keep the repository active` | Commit message used while committing to the repo                                                                  | No       |
+| `committer_username` | `gkr-bot`                                                              | Username used while committing to the repo                                                                        | No       |
+| `committer_email`    | `gkr@tuta.io`                                                          | Email id used while committing to the repo                                                                        | No       |
+| `time_elapsed`       | `50`                                                                   | Time elapsed from the previous commit to trigger a new automated commit (in days)                                 | No       |
+| `auto_push`          | `true`                                                                 | Defines if the workflow pushes the changes automatically                                                          | No       |
+| `auto_write_check`   | `false`                                                                | Specifies whether the workflow will verify the repository's write access privilege for the token before executing | No       |
+| `use_api`            | `true`                                                                 | Instead of using dummy commits, workflow uses GitHub API to keep the repository active.                           | No       |
 
 
 ### For Javascript Library
 If you are using the JS Library version of the project, please consult the function's DocStrings in [library.js](library.js) to see the list of available parameters.
 
+### About Workflow Versions
+- v1 version of project used dummy commit by default to keep the repository active, It will no longer be maintained except for security patches and bug fixes. You can view the source coe of v1 version at the [master](https://github.com/gautamkrishnar/keepalive-workflow/tree/master) branch of this repository. This branch is kept intact for people who are using `gautamkrishnar/keepalive-workflow@master`.
+- v2 version will be developed and maintained by keeping the [version2](https://github.com/gautamkrishnar/keepalive-workflow/tree/version2) branch as the source. Going forward, This will be the main branch.
 
 ### FAQs and Common issues
 - [Error Code 128 / `GH006: Protected branch update failed`](https://github.com/gautamkrishnar/keepalive-workflow/discussions/13)
