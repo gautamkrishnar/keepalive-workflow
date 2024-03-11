@@ -199,7 +199,21 @@ If you use the workflow as mentioned via GitHub actions following are the option
 ### For Javascript Library
 If you are using the JS Library version of the project, please consult the function's DocStrings in [library.js](library.js) to see the list of available parameters.
 
-### About Workflow Versions
+### Migrating from v1 to v2
+If you are an existing user which used this workflow's v1 version, you can easily migrate to v2 by simply updating the permissions key in your workflow:
+Change:
+```yaml
+permissions:
+  contents: write
+```
+to
+```yaml
+permissions:
+  actions: write
+```
+And change the workflow's version from `gautamkrishnar/keepalive-workflow@v1` or `gautamkrishnar/keepalive-workflow@master` to `gautamkrishnar/keepalive-workflow@v2`. This will automatically start using the workflow's API based method. No more dummy commits 🕺 .
+
+### Workflow Versions
 - v1 version of project used dummy commit by default to keep the repository active, It will no longer be maintained except for security patches and bug fixes. You can view the source coe of v1 version at the [master](https://github.com/gautamkrishnar/keepalive-workflow/tree/master) branch of this repository. This branch is kept intact for people who are using `gautamkrishnar/keepalive-workflow@master`.
 - v2 version will be developed and maintained by keeping the [version2](https://github.com/gautamkrishnar/keepalive-workflow/tree/version2) branch as the source. Going forward, This will be the main branch.
 
