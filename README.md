@@ -20,8 +20,8 @@ name: Github Action with a cronjob trigger
 on:
   schedule:
     - cron: "0 0 * * *"
-  permissions:
-    actions: write
+permissions:
+  actions: write
 jobs:
   cronjob-based-github-action:
     name: Cronjob based github action
@@ -66,8 +66,8 @@ name: Github Action with a cronjob trigger
 on:
   schedule:
     - cron: "0 0 * * *"
-  permissions:
-    contents: write
+permissions:
+  contents: write
 jobs:
   cronjob-based-github-action:
     name: Cronjob based github action
