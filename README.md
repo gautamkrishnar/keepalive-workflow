@@ -201,6 +201,7 @@ If you are using the JS Library version of the project, please consult the funct
 
 ### Migrating from v1 to v2
 If you are an existing user which used this workflow's v1 version, you can easily migrate to v2 by simply updating the permissions key in your workflow:
+
 Change:
 ```yaml
 permissions:
