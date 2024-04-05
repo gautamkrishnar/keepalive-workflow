@@ -79,7 +79,7 @@ jobs:
       # - step n, use it as the last step
       - uses: gautamkrishnar/keepalive-workflow@v2
         with:
-          use_api: true
+          use_api: false
 
 ```
 
