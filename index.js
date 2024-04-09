@@ -13,18 +13,35 @@ const useAPI = (core.getInput('use_api') === 'true');
 
 if (useAPI) {
   // API Mode
-  APIKeepAliveWorkflow(githubToken, {
-    autoWriteCheck,
-    timeElapsed
-  })
-    .then((message) => {
-    core.info(message);
-    process.exit(0);
-  })
-    .catch((error) => {
-      core.error(error);
-      process.exit(1);
-    });
+  const workflowsList = [null, ...(core.getInput('workflow_files')
+    .split(',')
+    .map(item => item.trim())
+    .filter(Boolean))];
+  const promiseArr = []
+  workflowsList.forEach((workflowFile) => {
+    promiseArr.push(new Promise(async (resolve, reject) => {
+      core.info(`Executing keepalive for ${workflowFile ? workflowFile : 'parent workflow'}`);
+      APIKeepAliveWorkflow(githubToken, {
+        autoWriteCheck,
+        timeElapsed,
+        workflowFile
+      }).then((res) => resolve(res))
+        .catch((err) => reject(err));
+    }));
+  });
+  let exitFlag = 0;
+  Promise.allSettled(promiseArr).then((results) => {
+    results.forEach((result) => {
+      if (result.status === 'fulfilled') {
+        core.info(result.value);
+      } else {
+        core.error(result.value)
+        exitFlag = 1;
+      }
+    })
+  }).finally(() => {
+    process.exit(exitFlag);
+  });
 } else {
   // Using the Git Mode
   KeepAliveWorkflow(githubToken, committerUsername, committerEmail, commitMessage, timeElapsed, autoPush, autoWriteCheck)

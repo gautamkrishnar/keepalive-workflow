@@ -57,6 +57,73 @@ jobs:
       - uses: actions/checkout@v4
       - uses: gautamkrishnar/keepalive-workflow@v2
 ```
+##### Advanced use cases
+<details>
+  <summary>Keeping another workflow file active using keepalive workflow</summary>
+
+Lets assume that you have some build workflows:
+
+- `.github/workflows/build1.yml`
+```yaml
+name: Build 20
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+```
+- `.github/workflows/build2.yml`
+```yaml
+name: Build 19
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "19"
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+```
+
+You can keep both of these workflows active using the following keepalive workflow code:
+```yaml
+name: Keepalive Workflow
+on:
+  schedule:
+    - cron: "0 0 * * *"
+permissions:
+  actions: write
+jobs:
+  cronjob-based-github-action:
+    name: Keepalive Workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
+        with:
+          workflow_files: "build1.yml, build2.yml"
+          time_elapsed: "0"
+```
+</details>
 
 ### Dummy Commit Keepalive Workflow (For GitHub Actions users)
 To use the workflow in auto commit mode you can use the following code, Please note that this will create empty commits in your repository every 50 days to keep it active.
@@ -184,16 +251,17 @@ APIKeepAliveWorkflow(githubToken, {
 ### For GitHub Action
 If you use the workflow as mentioned via GitHub actions following are the options available to you to customize its behavior.
 
-| Option               | Default Value                                                          | Description                                                                                                       | Required |
-|----------------------|------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|----------|
-| `gh_token`           | your default GitHub token with repo scope                              | GitHub access token with Repo scope                                                                               | No       |
-| `commit_message`     | `Automated commit by Keepalive Workflow to keep the repository active` | Commit message used while committing to the repo                                                                  | No       |
-| `committer_username` | `gkr-bot`                                                              | Username used while committing to the repo                                                                        | No       |
-| `committer_email`    | `gkr@tuta.io`                                                          | Email id used while committing to the repo                                                                        | No       |
-| `time_elapsed`       | `50`                                                                   | Time elapsed from the previous commit to trigger a new automated commit (in days)                                 | No       |
-| `auto_push`          | `true`                                                                 | Defines if the workflow pushes the changes automatically                                                          | No       |
-| `auto_write_check`   | `false`                                                                | Specifies whether the workflow will verify the repository's write access privilege for the token before executing | No       |
-| `use_api`            | `true`                                                                 | Instead of using dummy commits, workflow uses GitHub API to keep the repository active.                           | No       |
+| Option               | Default Value                                                          | Description                                                                                                                                                                              | Required |
+|----------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `gh_token`           | your default GitHub token with repo scope                              | GitHub access token with Repo scope                                                                                                                                                      | No       |
+| `commit_message`     | `Automated commit by Keepalive Workflow to keep the repository active` | Commit message used while committing to the repo                                                                                                                                         | No       |
+| `committer_username` | `gkr-bot`                                                              | Username used while committing to the repo                                                                                                                                               | No       |
+| `committer_email`    | `gkr@tuta.io`                                                          | Email id used while committing to the repo                                                                                                                                               | No       |
+| `time_elapsed`       | `50`                                                                   | Time elapsed from the previous commit to trigger a new automated commit (in days)                                                                                                        | No       |
+| `auto_push`          | `true`                                                                 | Defines if the workflow pushes the changes automatically                                                                                                                                 | No       |
+| `auto_write_check`   | `false`                                                                | Specifies whether the workflow will verify the repository's write access privilege for the token before executing                                                                        | No       |
+| `use_api`            | `true`                                                                 | Instead of using dummy commits, workflow uses GitHub API to keep the repository active                                                                                                   | No       |
+| `workflow_files`     | `""`                                                                   | Comma separated list of workflow files. You can use this to keepalive another workflow that's not a part of keepalive workflow's file. See [example](#advanced-use-cases) for more info. | No       |
 
 
 ### For Javascript Library

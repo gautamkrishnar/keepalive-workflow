@@ -35,6 +35,10 @@ inputs:
     description: "Instead of using dummy commits, workflow uses GitHub API to keep the repository active. This will keep your commit history clean. Make sure you set a gh_token with actions:write permission."
     default: "true"
     required: false
+  workflow_files:
+    description: "Comma separated list of workflow files. You can use this to keepalive another workflow that's not a part of keepalive workflow"
+    default: ""
+    required: false
 
 runs:
   using: node20
