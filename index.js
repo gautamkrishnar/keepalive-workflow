@@ -20,6 +20,8 @@ if (useAPI) {
   const promiseArr = []
   workflowsList.forEach((workflowFile) => {
     promiseArr.push(new Promise(async (resolve, reject) => {
+      const parentWorkflowPath = process.env.GITHUB_WORKFLOW_REF.match(/^(.*\.yml)/)[1];
+      core.info(`Executing keepalive for ${workflowFile ? workflowFile : `parent workflow (${parentWorkflowPath})`}`);
       core.info(`Executing keepalive for ${workflowFile ? workflowFile : 'parent workflow'}`);
       APIKeepAliveWorkflow(githubToken, {
         autoWriteCheck,
