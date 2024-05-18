@@ -312,6 +312,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/methodho"><img src="https://avatars.githubusercontent.com/u/2764992?v=4?s=100" width="100px;" alt="Shihyu"/><br /><sub><b>Shihyu</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=shihyuho" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://alexomara.com"><img src="https://avatars.githubusercontent.com/u/1740229?v=4?s=100" width="100px;" alt="Alexander O'Mara"/><br /><sub><b>Alexander O'Mara</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=AlexanderOMara" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://randyfay.com"><img src="https://avatars.githubusercontent.com/u/112444?v=4?s=100" width="100px;" alt="Randy Fay"/><br /><sub><b>Randy Fay</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/issues?q=author%3Arfay" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/julienloizelet"><img src="https://avatars.githubusercontent.com/u/20956510?v=4?s=100" width="100px;" alt="Julien Loizelet"/><br /><sub><b>Julien Loizelet</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/issues?q=author%3Ajulienloizelet" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
