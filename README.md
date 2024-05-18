@@ -311,6 +311,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://lisk.in/"><img src="https://avatars.githubusercontent.com/u/300342?v=4?s=100" width="100px;" alt="Tomáš Janoušek"/><br /><sub><b>Tomáš Janoušek</b></sub></a><br /><a href="#ideas-liskin" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/methodho"><img src="https://avatars.githubusercontent.com/u/2764992?v=4?s=100" width="100px;" alt="Shihyu"/><br /><sub><b>Shihyu</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=shihyuho" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://alexomara.com"><img src="https://avatars.githubusercontent.com/u/1740229?v=4?s=100" width="100px;" alt="Alexander O'Mara"/><br /><sub><b>Alexander O'Mara</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/commits?author=AlexanderOMara" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://randyfay.com"><img src="https://avatars.githubusercontent.com/u/112444?v=4?s=100" width="100px;" alt="Randy Fay"/><br /><sub><b>Randy Fay</b></sub></a><br /><a href="https://github.com/gautamkrishnar/keepalive-workflow/issues?q=author%3Arfay" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
