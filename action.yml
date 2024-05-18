@@ -20,8 +20,8 @@ inputs:
     default: "gkr-bot@tuta.io"
     required: false
   time_elapsed:
-    description: "Time elapsed from the last commit to trigger a new automated commit (in days)"
-    default: "50"
+    description: "Time elapsed from the last commit to trigger a new automated commit or API call (in days)"
+    default: "45"
     required: false
   auto_push:
     description: "Defines if the workflow pushes the changes automatically"
