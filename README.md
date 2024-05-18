@@ -7,7 +7,7 @@ GitHub will suspend the scheduled trigger for GitHub action workflows if there i
 ![preview](https://user-images.githubusercontent.com/8397274/105174930-4303e100-5b49-11eb-90ed-95a55697582f.png)
 
 ### What
-This workflow will automatically use the GitHub API (or create a dummy commit) in your repo if the last commit in your repo is 50 days (default) ago.
+This workflow will automatically use the GitHub API (or create a dummy commit) in your repo if the last commit in your repo is 45 days (default) ago.
 This will keep the cronjob trigger active so that it will run indefinitely without getting suspended by GitHub for inactivity.
 
 ## How to use
@@ -126,7 +126,7 @@ jobs:
 </details>
 
 ### Dummy Commit Keepalive Workflow (For GitHub Actions users)
-To use the workflow in auto commit mode you can use the following code, Please note that this will create empty commits in your repository every 50 days to keep it active.
+To use the workflow in auto commit mode you can use the following code, Please note that this will create empty commits in your repository every 45 days to keep it active.
 Use the default API based option instead for a clean Git commit history.
 ```yaml
 name: Github Action with a cronjob trigger
