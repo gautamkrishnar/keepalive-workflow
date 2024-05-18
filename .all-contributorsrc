@@ -99,6 +99,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "rfay",
+      "name": "Randy Fay",
+      "avatar_url": "https://avatars.githubusercontent.com/u/112444?v=4",
+      "profile": "http://randyfay.com",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
