@@ -71,13 +71,15 @@ var require_util = __commonJS({
         { encoding: "utf8", stdio: ["pipe", "pipe", "pipe"] }
       );
       const commitDate = new Date(parseInt(outputData, 10) * 1e3);
-      const diffInDays = Math.round((/* @__PURE__ */ new Date() - commitDate) / (1e3 * 60 * 60 * 24));
-      return diffInDays;
+      return Math.round((/* @__PURE__ */ new Date() - commitDate) / (1e3 * 60 * 60 * 24));
     };
-    var writeDetectionCheck = (autoWriteCheck2, cb) => {
+    var writeDetectionCheck = (autoWriteCheck2, cbReject, cbResolve) => {
       if (autoWriteCheck2) {
         if (process.env.GITHUB_REF_PROTECTED === "true") {
-          cb(`Looks like the branch is write protected. You need to disable that for this to work: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches`);
+          cbReject(`Looks like the branch is write protected. You need to disable that for this to work: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches`);
+        }
+        if (process.env.GITHUB_EVENT_NAME === "pull_request" || process.env.GITHUB_EVENT_NAME === "pull_request_target") {
+          cbResolve("Looks like this is triggered via a pull request. Doing Nothing...");
         }
       }
     };
@@ -3946,7 +3948,7 @@ var require_library = __commonJS({
     var KeepAliveWorkflow2 = async (githubToken2, committerUsername2, committerEmail2, commitMessage2, timeElapsed2 = 50, autoPush2 = false, autoWriteCheck2 = false) => {
       return new Promise(async (resolve, reject) => {
         try {
-          writeDetectionCheck(autoWriteCheck2, reject);
+          writeDetectionCheck(autoWriteCheck2, reject, resolve);
           const diffInDays = await getDiffInDays();
           if (diffInDays >= timeElapsed2) {
             await execute("git", [
@@ -3997,7 +3999,7 @@ var require_library = __commonJS({
     } = {}) => {
       return new Promise(async (resolve, reject) => {
         try {
-          writeDetectionCheck(autoWriteCheck2, reject);
+          writeDetectionCheck(autoWriteCheck2, reject, resolve);
           const diffInDays = await getDiffInDays();
           if (diffInDays >= timeElapsed2) {
             const octokit = new Octokit({
