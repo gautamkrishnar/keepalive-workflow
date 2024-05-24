@@ -19,7 +19,7 @@ const { Octokit } = require("@octokit/rest");
 const KeepAliveWorkflow = async (githubToken, committerUsername, committerEmail, commitMessage, timeElapsed = 50, autoPush = false, autoWriteCheck = false) => {
   return new Promise(async (resolve, reject) => {
     try {
-      writeDetectionCheck(autoWriteCheck, reject);
+      writeDetectionCheck(autoWriteCheck, reject, resolve);
       const diffInDays = await getDiffInDays();
       if (diffInDays >= timeElapsed) {
         // Do dummy commit if elapsed time is greater than 50 (default) days
@@ -93,7 +93,7 @@ const APIKeepAliveWorkflow = (githubToken,
                               } = {}) => {
   return new Promise(async (resolve, reject) => {
     try {
-      writeDetectionCheck(autoWriteCheck, reject);
+      writeDetectionCheck(autoWriteCheck, reject, resolve);
       const diffInDays = await getDiffInDays();
       if (diffInDays >= timeElapsed) {
         const octokit = new Octokit({

@@ -57,13 +57,18 @@ const getDiffInDays = async () => {
 /**
  * Automatic write check
  * @param {boolean} autoWriteCheck
- * @param {function(string): void} cb callback on check failure
+ * @param {function(string): void} cbReject failure callback
+ * @param {function(string): void} cbResolve success callback
  */
-const writeDetectionCheck = (autoWriteCheck, cb) => {
+const writeDetectionCheck = (autoWriteCheck, cbReject, cbResolve) => {
   if (autoWriteCheck) {
     // Protected branches
     if (process.env.GITHUB_REF_PROTECTED === 'true') {
-      cb(`Looks like the branch is write protected. You need to disable that for this to work: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches`)
+      cbReject(`Looks like the branch is write protected. You need to disable that for this to work: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches`)
+    }
+    // Pull request check - Do nothing
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request' || process.env.GITHUB_EVENT_NAME === 'pull_request_target') {
+      cbResolve('Looks like this is triggered via a pull request. Doing Nothing...');
     }
   }
 }
