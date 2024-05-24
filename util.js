@@ -50,8 +50,7 @@ const getDiffInDays = async () => {
     {encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe']});
 
   const commitDate = new Date(parseInt(outputData, 10) * 1000);
-  const diffInDays = Math.round((new Date() - commitDate) / (1000 * 60 * 60 * 24));
-  return diffInDays;
+  return Math.round((new Date() - commitDate) / (1000 * 60 * 60 * 24));
 }
 
 /**
